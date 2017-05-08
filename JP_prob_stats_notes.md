@@ -1,4 +1,4 @@
-Probability and Stats notes
+# Probability and Stats Notes
 
 
 To test for normality in Scipy:
