@@ -260,149 +260,6 @@ arg3: 3
 
 <BR><BR>
 
-#### Datetime Module
-***
-Quick and dirty usage, with `.strftime()`:  
-
-```python
->>> from datetime import datetime
->>> datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-```
-`datetime.year()`
-`datetime.date()`
-etc.
-
-
-Note that Pandas `pd.to_datetime()` method is more flexible in what arguments it handles than the standard `datetime.datetime()` Python module.  `datetime.datetime()` can only accept integers in the correct argument positions (or an unzipped list with the `*` command).  Pandas can accept a string in the format of `'2017 September 7 12:33:00'`.  Note that the delimiters must be spaces and that the time must also be included. In another example of the flexibility of the Pandas function, the time can be represented as `4:19PM ET` or something similar -- including the "AM" or "PM" designation as well as a timezone abbreviation -- and Pandas will still parse it correctly.  Nice!
-    Technically the Pandas method will return a `timestamp`, but the individual attributes such as `.hour` or `.date()` are still viable.
-
-<BR><BR>
-
-The following is taken from [this excellent post](http://www.marinamele.com/2014/03/13-useful-tips-about-python-datetime.html) on how to use the `datetime` module effectively.  
-
-The Python `datetime` library provides several useful objects to manipulate times and dates. I’ve been using them a lot lately, and I want to share some useful operations that might be useful to you as well 😉
-
-You can find a video version of this post at the bottom of the page 🙂
-
-1. First, let’s import the `datetime` library and create three different kind of objects:
-    + `date` object: stores the date
-    + `time` object: stores the time
-    + `datetime` object: stores both the date and the time
-
-    If we create the `datetime` object first, we can extract its date and time and create the respective objects:
-
-    ```python
-    >>> import datetime
-    >>> now = datetime.datetime.now()
-    >>> today = now.date()
-    >>> moment = now.time()
-    ```
-
-    If you print each of these items you’ll get something like:
-
-    ```python
-    >>> now
-    datetime.datetime(2014, 3, 23, 16, 38, 46, 271475)
-    >>> today
-    datetime.date(2014, 3, 23)
-    >>> moment
-    datetime.time(16, 38, 46, 271475)
-    ```
-
-    Where you can see that the time is 16h 46min and 46.171475 seconds, and today is March 23rd, 2014.  
-
-2. You can also create a date and time objects and obtain a `datetime` object using the `combine` method:
-
-    ```python
-    >>> today = datetime.date.today()
-    >>> moment = datetime.datetime.now().time()
-    >>> now = datetime.datetime.combine(today, moment)
-    ```
-
-3. Another interesting object is the `timedelta` object, which can be used to sum or subtract a number of days:
-
-    ```python
-    >>> yesterday = today - datetime.timedelta(1)
-    ```
-
-    Or it can store a datetime difference between two `datetime` objects:
-
-    ```python
-    >>> delta = yesterday - today
-    ```
-
-4. `Date` objects have three mandatory arguments (you can change its order by using keys):
-
-    ```python
-    >>> my_date = datetime.date(1984, 6, 24)
-    >>> my_date = datetime.date(day=24, year=1984, month=6)
-    ```
-
-5. `Time` objects don’t have mandatory arguments. These tree statements are equivalent:
-
-    ```python
-    >>> my_time = datetime.time()
-    >>> my_time = datetime.time(0,0)  # first argument hour, second minute
-    >>> my_time = datetime.time(hour=0, minute=0)
-    ```
-
-6. `Datetime` objects have the same mandatory arguments as the date objects:
-
-    ```python
-    >>> my_datetime = datetime.datetime(year=1984, month=6, day=24)  # Time is set to 0:00
-    >>> my_other_datetime = datetime.datetime(1984, 6, 24, 18, 30)
-    >>> my_other_datetime = datetime.datetime(year=1984, month=6, day=24, hour=18, minute=30)
-    ```
-
-7. Change one `datetime` object to obtain another using the `replace` method:
-
-    ```python
-    >>> another_datetime = my_datetime.replace(year=2014, month=1)
-    ```
-
-8. Obtain a `datetime` object representing the epoch: 01-01-1970:
-
-    ```python
-    >>> epoch = datetime.datetime.utcfromtimestamp(0)
-    ```
-
-9. Obtain the number of days and seconds between the epoch and now, or the total number of seconds that have passed:
-
-    ```python
-    >>> delta = now - epoch
-    >>> days = delta.days
-
-    >>> seconds = delta.seconds
-    >>> total_seconds = delta.total_seconds()
-    ```
-
-10. Recover now using the number of seconds since epoch using the `utcfromtimestamp` method:
-
-    ```python
-    >>> now = datetime.datetime.utcfromtimestamp(seconds)
-    ```
-
-11. Write a `date` object as “1984-06-24”:
-
-    ```python
-    >>> string_date = str(my_date)
-    ```
-
-12. Recover a `date` object from a string like “1984-06-24”:
-
-    ```python
-    >>> my_date = datetime.date(*[int(i) for i in string_date.split("-")])
-    ```
-
-13. Write a `date` object with a **custom string format** – the `strftime` method:
-
-    ```python
-    >>> string_date =  my_date.strftime('%m/%d/%Y')  # This writes "06/24/1984"
-    ```
-
-You can also check this video version made by Webucator. Don’t forget to visit their website to check their [Python courses](https://www.webucator.com/programming/python.cfm) 🙂.
-
-
 <BR><BR><BR>
 
 #### Exiting a Script
@@ -645,7 +502,11 @@ Currently the four supplied I/O color choices are:
 + `Linux`  
 
 `Neutral` is the default.  For my personal standard soft-blue terminal, `Neutral` clashes badly.  I always use `LightBG`, as it is what I was used to before the change in 5.0 anyway.  
-**I have a TextExpander shortcut set up to change both I/O and syntax highlighting colors in Ipython: in the interactive shell, type `ipc` and the commands will pop up ready.**
+
+**I have a TextExpander shortcut set up to change both I/O and syntax highlighting colors in Ipython: in the interactive shell, type `ipc` and the commands below will pop up ready:**
+
+`%colors LightBG`
+`%config TerminalInteractiveShell.highlighting_style = 'xcode'`
 
 
 [Official docs](http://ipython.readthedocs.io/en/stable/config/details.html#terminal-colors) on changing terminal colors. And another [documentation](http://ipython.readthedocs.io/en/stable/config/details.html#termcolour).
@@ -656,10 +517,12 @@ Currently the four supplied I/O color choices are:
 ##### Syntax Highlighting
 For changing syntax highlighting, you can choose from the bundled `pygments` (themes):
 This command will show you the available pygments, some of which are replicas of popular text editors like *vim* or *emacs*.  
+
 ```python
 import pygments
 list(pygments.styles.get_all_styles())
 ```
+
 The currently supplied choices are:  
 `default` | `emacs` | `friendly` | `colorful` | `autumn` | `murphy` | `manni` | `monokai` | `perldoc` | `pastie` | `borland` | `trac` | `native` | `fruity` | `bw` | `vim` | `vs` | `tango` | `rrt` | `xcode` | `igor` | `paraiso-light` | `paraiso-dark` | `lovelace` | `algol` | `algol_nu`
 

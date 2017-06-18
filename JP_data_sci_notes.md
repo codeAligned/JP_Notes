@@ -2,6 +2,21 @@
 
 ## Modeling
 
+### Error Estimate in Model Selection (Monte Carlo Cross-Validation)
+As Sebastian Rauschka points out in his [three-part model selection series](https://sebastianraschka.com/blog/2016/model-evaluation-selection-part1.html), confidence intervals for model performance can be estimated primarily one of three ways.
+
+1. [Normal Approximation Interval](https://sebastianraschka.com/blog/2016/model-evaluation-selection-part1.html#confidence-intervals)
+2. [Monte Carlo Cross-Validation](https://sebastianraschka.com/blog/2016/model-evaluation-selection-part2.html#repeated-holdout-validation)
+3. [Bootstrap and Empirical Confidence Interval](https://sebastianraschka.com/blog/2016/model-evaluation-selection-part2.html#the-bootstrap-method-and-empirical-confidence-intervals)
+
+For now I'll leave the Normal Approximation Interval approach, which he describes as "rather naive" and something he would "not recommend," up to him.  It is fairly straightforward, using the standard error of the mean to compute confidence intervals so long as the original distribution that our samples are taken from is indeed Gaussian.
+
+The other approach is more "hands on", relying less on distribution assumptions and the tenets of the Central Limit Theorem, and instead is an aggregation of actual model results.  All you do is simply run the model multiple times with different original seeds in the train/test split (thus resulting in different data points being in each split with each run) and average the performance results.  Finding this average and then taking the difference between it and the performance when using the full train set (no test set, max overfit) would tell us the pessimistic bias estimate of the model's generalizability.
+
+The Bootstrap CI method is more involved and described with both equations and some plots in his article, which I won't aim to reproduce here.
+
+
+
 ### Cross-Validation
 The purpose of CV is to make better use of given data to test the predictive reliability of a model.  If data size were not an issue (say one million or more samples/rows, and with fairly balanced classes if applicable), we could do a three-way split of our data: train set, validation set, test set.  We would train the model on the train set, validate it repeatedly on the validation set, and once satisfied with that performance we would lastly test on the test set. But such spoils of data are rare, so we instead have to creatively implement a validation set. Cross-Validation is how we do that.
 
@@ -27,7 +42,7 @@ So, our goal is to (ideally) remove all related features for any type of model. 
 
 3. __Recursive Feature Elimination (RFE):__  
     This technique is primarily used in ensemble tree methods.  Run your model and simply remove a certain percentage of the least important features.  For example, after your initial model run the bottom 20% of features would be removed from the dataset and the model would be run again.  Upon completion, the newest bottom 20% of features would be removed, and the entire process repeated until the dataset is ideally "unique".  The stopping point is usually determined by the model's predictive accuracy -- if upon removal of a set of features the model begins to be less predictive, we have discarded unique and vital information that should clearly be left in the model.  Thus successively removing a swath of features can help identify the true importance of the remaining features, but doing so overly zealously will negatively impact the predictions of the model itself.   
-    A slight variation on this approach is to iteratively remove a single feature from the dataset, run the model, and repeat for the entire set of features.  This allows us to numerically rank which features have the biggest impact (this is what ensemble tree methods do to determine their "feature importance" values).  SK-Learn has an [RFE package](http://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html) which will use any model you specify that can return feature importance or coefficients to determine which features should be recursively eliminated.  You can even return predictions directly from the RFE model using the trimmed feature set. 
+    A slight variation on this approach is to iteratively remove a single feature from the dataset, run the model, and repeat for the entire set of features.  This allows us to numerically rank which features have the biggest impact (this is what ensemble tree methods do to determine their "feature importance" values).  SK-Learn has an [RFE package](http://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html) which will use any model you specify that can return feature importance or coefficients to determine which features should be recursively eliminated.  You can even return predictions directly from the RFE model using the trimmed feature set.
 
 4. __Variable Decomposition with Principal Component Analysis (PCA):__  
     Also known as _dimension reduction_, this technique seeks to decompose a set of variables to their core components using some higher-order math.  While the math going on under the hood is not something I have studied, so I am not qualified to describe it with any authority, the basic gist of PCA is clear: to take a dataset of higher dimensionality (i.e. many variables, of which numerous likely share some colinearity) and identify the underlying core components to create _new_ variables that are uncorrelated by definition (this is a form of dimensionality reduction).  As a result, the output of PCA means there should be _no_ correlation between variables in the dataset, making it ready for any model.  (Note: there are issues with using _sparse_ data in PCA. If the dataset in question is sparse, PCA may or may not be a viable technique to use).  SK-Learn has a [PCA package](http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html) available, including references to some of the underlying theory behind the technique.

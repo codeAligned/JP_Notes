@@ -22,6 +22,9 @@ check out `pd.melt(df)` -- neat function for reorganizing a DF by "ungrouping" o
 np.bincount([iterable_name])
 ```
 
+`pd.isnull(df).any(1).nonzero()[0]`
+
+
 Access or change the `name` attribute of both columns and index:
 `df.index.name`
 `df.columns.name`
@@ -439,7 +442,7 @@ df = pd.concat([df, tmp_df], axis=1)
 
 
 ### Append, Concat, Join, and Merge
-Pandas can be tricky with these four options.  From my experience, they break down as follows: `append` and `concat` are similar, and `join` and `merge` are similar.
+Pandas can be tricky with these four options.  From my experience, they break down as follows: `append` and `concat` are similar, and `join` and `merge` are similar.  By default, `merge()` looks to join on common columns, `join()` on common indices, and `concat()` by just appending on a given axis.
 
 #### Append and Concat
 After much tinkering, I find that `append` and `concat` only stack the second DF onto the bottom of the first DF for `axis=0`, or the the right side for `axis=1`. `Concat` can intelligently combine the DFs if they share the same columns or same index. Append is more forceful in that it just stacks the new DF onto the bottom of the old DF, even if they share an index.  Because of its nature, `append` is also commonly used when adding a single series instead of an entire DF (though you will likely need to ignore the index, `ignore_index=True`).

@@ -2,6 +2,11 @@
 
 <BR>
 
+Good reference sites:
+1. [W3 School - SQL](https://www.w3schools.com/sql/default.asp)
+2. [Mode Analytics - SQL](https://community.modeanalytics.com/sql/tutorial/introduction-to-sql) With beginner, intermediate, and advanced tutorials
+3. [PostgreSQL Manual](https://www.postgresql.org/docs/9.6/static/index.html) Very good examples of SQL unrelated to PostgreSQL itself.
+
 ## SQL General Notes
 ***
 **SQL** stands for **Structured Query Language** and has been around since the 1970s.  It's a language used to interact with databases and is industry standard, with various "flavors" being used in a given industry or company.  Python supports many of these flavors, with the two most common likely being **SQLite3** and **MySQL**.  Certain frameworks or modules for utilizing SQL in Python, such as **SQLAlchemy** and **PostgreSQL**, are popular and more powerful/convenient than vanilla SQL. There are other database access languages and management systems, such as **NoSQL** or **MongoDB** (**PyMongo**).  For these notes we will be focusing on SQL.
@@ -175,241 +180,11 @@ fetch one:
 
 <BR><BR><BR>
 
-## Postgres and PSQL
+
+## SQL Syntax and Functions Notes
+### Queries for Data
 ***
-Note that **Homebrew** and **Postgres** are *not* part of the Anaconda distribution, so you will have to install these independently using **brew** even if you are using an Anaconda distribution of Python.
-
-### Installing Postgres
-*JP Note*: According to an interview, I think Postgres is available via **Conda** (it may not be in the main distribution)
-1. Install **homebrew** and **brew cask**.
-    + Install homebrew. Instructions [here](http://brew.sh/)
-    + Install brew cask with: `brew install caskroom/cask/brew-cask`
-    + If you already have them, update: `brew update && brew upgrade brew-cask`
-
-2. Install your **Postgres** database.
-    + The easiest way is to install the pre-built application (with an elephant icon) using the following command: `brew cask install postgres`
-
-After the installation is complete, use *Spotlight* to search for `postgres` and open the application. It will ask you if you want to move it to the Applications folder, say "Move it"
-<BR><BR>
-
-### Setting up PSQL on a Mac
-1. In terminal go to your home directory (`cd ~/`)
-2. Open terminal configurations:
-    + `atom ~/.bash_profile` (This will vary somewhat based on OS. If `.bashrc` or `.profile` exist, edit those rather than using `.bash_profile`, which creates a new file).
-    + If you are using **zsh**: `atom .zshrc` (if you are on your personal computer and don't know what this is, you are probably using bash in \#1).
-3. Insert the following line at the end of the file and save the file: <br>
-    `export PATH=/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH`
-
-4. Open a new terminal and run `psql`
-<BR><BR>
-
-### Using Postgres (see [documentation](http://www.postgresql.org/docs/9.3/interactive/)):
-For a full walkthrough, follow instructions in `/DSI_Camp/Week1/SQL/individual.md` and/or ...`/pair.md`.  Some of the below steps are culled from these files.  
-
-**Important Note**:  
-`psql` allows you to interface with an existing .sql file as well as create a new database.  Commonly we will use `psql` to investigate, modify, and return certain information from an existing .sql database.  In these cases we have to create an empty `psql` database and then populate it with the existing .sql database.  The instructions below are written for this scenario.  
-
-1. In terminal, type `psql` to begin a PSQL session, then can do a command-space search for `postgres`, open it, and go from there.  Opening Postgres without having PSQL running will fail to open Postgres.  (Also, you can click the elephant menubar icon for psql and open it from there)
-
-2. From the command line run `psql` and then this command to create the database.
-
-    ```sql
-    CREATE DATABASE database_name;
-    \q -- quits psql upon creation of db
-    ```
-
-3. Navigate to where your .sql database exists on your hard drive and run the following commands to import the database:
-
-    ```bash
-    cd data
-    psql database_name < database_name.sql
-    ```
-    You should see a bunch of SQL commands flow through the terminal.
-
-4. To use the interactive Postgres prompt enter the following to be connected to your database.
-
-    ```bash
-    psql database_name
-    ```
-
-5. After you are done with PSQL, use `\q` to exit.
-
-Now we are in a command line client. This is how we will explore the database to gain an understanding of what data we are playing with.
-<BR><BR>
-
-#### Basic Exploration
-First, we will want to see what the available tables are. Remember, now that we are in the database, all of our commands or actions will be on the database you created `database_name`.  Please see below for a full list of PSQL commands.
-
-1. What are the tables in our database? Run `\d` to find out.
-2. What columns does each table have? Run `\d <tablename>` to find out.
-3. `q` will end any query, but not the program (`\q` ends the program)
-4. **ALL** queries must end in a `;`
-<BR><BR>
-
-#### Create a Temporary Table
-To create a temporary table, do the following:
-```sql
-SELECT userid, date_7d
-INTO TEMPORARY TABLE logins_mob
-FROM logins_7d JOIN logins ON logins_7d.userid = logins.userid
-WHERE logins.type = "mobile"
-```
-
-...or what have you. Enter this *into psql terminal*, where it will live as long as the session is open, allowing you to reference it as you need, including creating permanent tables from info taken from the temp tables.
-
-### psycopg2
-##### Editing SQL within Python via 'Pipelines'
-You will edit stuff all you want in psql terminal and then once ready you will enter it into terminal (or ipython).  You must create a connection using psycopg2, then a cursor for that connection.  You must enclose the SQL query as a `cursor.execute()` argument, then once done you have to actually `commit()` the query before the actual database will be modified.  At the end you must close the connection.   If you have *ANY ERROR AT ALL* in any `c.execute()` command/query, you MUST use `conn.rollback()` to clear the cursor, as it has been 'tainted' by the error.
-
-See "**postgres_script.py**" and **/sql-python/individual.md** for more info.
-
-```python
-import psycopg2
-from datetime import datetime
-
-conn = psycopg2.connect(dbname='socialmedia', user='postgres', host='/tmp')
-c = conn.cursor()
-
-today = '2014-08-14'
-
-timestamp = datetime.strptime(today, '%Y-%m-%d').strftime("%Y%m%d")
-
-c.execute(
-    '''CREATE TABLE logins_7d AS
-    SELECT userid, COUNT(*) AS cnt, type, timestamp %(timestamp)s AS date_7d
-    FROM logins
-    WHERE logins.tmstmp > timestamp %(timestamp)s - interval '7 days'
-    GROUP BY userid;''', {'timestamp': timestamp}
-)
-
-conn.commit()
-conn.close()
-```
-<BR><BR><BR>
-
-### PSQL Commands
-***
-##### GENERAL OPTIONS:
-Command | Action
---------|-------
-`-c COMMAND` | run only single command (SQL or internal) and exit
-`-d, --dbname=NAME` | specify database name to connect to (default: "logged in username here")
-`-f, --file=FILENAME` | execute commands from file, then exit
-`--help` | show this help, then exit
-`-l, --list` | list available databases, then exit
-`-v NAME=VALUE` | set psql variable NAME to VALUE
-`--version` | output version information, then exit
-`-X` | do not read startup file (~/.psqlrc)
- <BR>
-
-##### TYPES:
-Command | Action
---------|-------
-`\h` | for help with SQL commands
-`\?` | for help with psql commands
-`\g` | or terminate with semicolon (`;`) to execute query
-`\q` | to quit
-<BR>
-
-##### GENERAL:
-Command | Action
---------|-------
-`\c[onnect] [DBNAME\|- USER\|- HOST\|- PORT\|-] |` | connect to new database
-`\cd [DIR]` | change the current working directory
-`\encoding [ENCODING]` | show or set client encoding
-`\h [NAME]` | help on syntax of SQL commands, `*` for all commands
-`\set [NAME [VALUE]]` | set internal variable, or list all if no parameters
-`\timing` | toggle timing of commands (currently off)
-`\unset NAME` | unset (delete) internal variable
-`\prompt [TEXT] NAME` | prompt user to set internal variable
-`\! [COMMAND]` | execute command in shell or start interactive shell
-<BR>
-
-##### QUERY BUFFER:
-Command | Action
---------|-------
-`\e [FILE]` | edit the query buffer (or file) with external editor
-`\g [FILE]` | send query buffer to server (and results to file or `|pipe`)
-`\p` | show the contents of the query buffer
-`\r` | reset (clear) the query buffer
-`\w FILE` | write query buffer to file
-<BR>
-
-##### INPUT/OUTPUT:
-Command | Action
---------|-------
-`\echo [STRING]` | write string to standard output
-`\i FILE` | execute commands from file
-`\o [FILE]` | send all query results to file or `|pipe`
-`\qecho [STRING]` | write string to query output stream (see `\o`)
-<BR>
-
-##### INFORMATIONAL:
-Command | Action
---------|-------
-`\d [NAME]` | describe table, index, sequence, or view
-`\d{t|i|s|v|S} [PATTERN]` (add `+` for more detail) | list tables/indexes/sequences/views/system tables
-`\da [PATTERN]` | list aggregate functions
-`\db [PATTERN]` | list tablespaces (add `+`)
-`\dc [PATTERN]` | list conversions
-`\dC` | list casts
-`\dd [PATTERN]` | show comment for object
-`\dD [PATTERN]` | list domains
-`\df [PATTERN]` | list functions (add `+`)
-`\dF [PATTERN]` | list text search configurations (add `+`)
-`\dFd [PATTERN]` | list text search dictionaries (add `+`)
-`\dFt [PATTERN]` | list text search templates
-`\dFp [PATTERN]` | list text search parsers (add `+`)
-`\dg [PATTERN]` | list groups
-`\dn [PATTERN]` | list schemas (add `+`)
-`\do [NAME]` | list operators
-`\dl` | list large objects (same as `\lo_list`)
-`\dp [PATTERN]` | list table, view, and sequence access privileges
-`\dT [PATTERN]` | list data types (add `+`)
-`\du [PATTERN]` | list users
-`\l` | list all databases (add `+`)
-`\z [PATTERN]` | list table, view, and sequence access privileges (same as `\dp`)
-<BR>
-
-##### FORMATTING:
-Command | Action
---------|-------
-`\a` | toggle between unaligned and aligned output mode
-`\C [STRING]` | set table title, or unset if none
-`\f [STRING]` | show or set field separator for unaligned query output
-`\H` | toggle HTML output mode (currently off)
-`\pset NAME [VALUE]` | set table output option: (NAME := {format \| border \| expanded \| fieldsep \| footer \| null \| numericlocale \| recordsep \| tuples_only \| title \| tableattr \| pager})
-`\t` | show only rows (currently off)
-`\T [STRING]` | set HTML <table> tag attributes, or unset if none
-`\x` | toggle expanded output (currently off)
-<BR>
-
-##### COPY, LARGE OBJECT:
-Command | Action
---------|-------
-`\copy ...` | perform SQL COPY with data stream to the client host
-`\lo_export LOBOID FILE` | LOBOID FILE
-`\lo_import FILE [COMMENT]` | FILE [COMMENT]
-`\lo_list` | list
-`\lo_unlink LOBOID` | large object operations
-<BR>
-
-##### Connection Options:
-Command | Action
---------|-------
-`-h, --host=HOSTNAME` | database server host or socket directory
-`-p, --port=PORT `| database server port number
-`-U, --username=NAME` | connect as specified database user
-`-W, --password` | force password prompt (should happen automatically)
-`-e, --exit-on-error` | exit on error, default is to continue
-`-d DBNAME` | some database
-
-
-<BR><BR><BR>
-
-## Notes From SQL ZOO Trials
-***
-For strings, SQL requires single quotes.
+For strings, some versions of SQL require single quotes.
 Statements end in semi-colons.
 
 ```sql
@@ -425,7 +200,13 @@ WHERE [col] BETWEEN [val] AND [val]
 Can do calculations in syntax (e.g. `SELECT gdp/pop FROM [table]` gives the gdp per person)
 Can return length of entry with `SELECT LENGTH(row)`
 
-##### CASE:  
+#### WHERE
+
+
+#### BETWEEN and IN
+
+
+#### CASE:  
 The `CASE` statement shown is used to substitute North America for Caribbean
 `CASE` is used before the column of choice in this case, giving only the modified column and not the original
 
@@ -436,7 +217,7 @@ ELSE continent END
 FROM world
 ```
 
-##### OR:  
+#### OR:  
 Note you have to write name of `column` (continent, here) and its definition for each `OR` when using `OR` statements.
 
 ```sql
@@ -456,7 +237,7 @@ FROM world
 WHERE name LIKE 'A%' OR name LIKE ('B%')
 ```
 
-##### Exclusive OR (XOR):
+#### Exclusive OR (XOR):
 Show the countries that are big by area or big by population but not both. Show name, population and area.
 ```sql
 SELECT name, population, area FROM world
@@ -473,17 +254,19 @@ WHERE name = ‘joe’ AND (age < 25 OR age > 40)
 ```
 
 
-##### DISTINCT:  
+#### DISTINCT and LIMIT:  
 Used to return distinct results
 ```sql
 SELECT DISTINCT City FROM Customers;
 ```
 
-##### Select All Columns
+
+
+
+#### Select All Columns
 There are two primary ways to select all columns from a table.
 1. List the column name of each column.
 2. Use the symbol \*.  
-3.
 For example, to select all columns from `Store_Information`, we issue the following SQL:
 
 ```sql
@@ -491,7 +274,8 @@ SELECT * FROM Store_Information;
 ```
 
 
-##### AGGREGATE FUNCTIONS
+#### AGGREGATE FUNCTIONS
+##### GROUP BY
 ```sql
 AVG(), COUNT(), MAX(), MIN(), SUM() [FIRST(), LAST()]
 ```
@@ -508,15 +292,142 @@ WHERE teamid = 'GER'
 GROUP BY matchid, mdate
 ```
 
+##### HAVING
 
-##### JOIN
+
+
+#### ORDER BY
+
+<BR>
+
+#### JOIN
 You can combine two steps into a single query with a `JOIN`.
+
 ```sql
 SELECT *
 FROM game JOIN goal ON (game.id = goal.matchid)
 ```
 
+
 The `FROM` clause says to merge data from the `goal` table with that from the `game` table. The ON says how to figure out which rows in `game` go with which rows in `goal` - the `id` from `goal` must match `matchid` from `game`.
+
+
+##### Self JOIN
+One 'trick' when performing joins is to do a _self join_.  In effect we create a copy of the given table and join one copy to the other in order to do certain operations to one while preserving the original information in the other, usually.  A basic example of why we'd do this is if we had a table of sales made and divisions they were in, and the managers of the various groups making sells in each division.  If we want to find the maximum amount sold by a group _per division_, and then also report the name of the manager for the group that was the highest, we can do a self join.
+
+It would work roughly like this:
+1. `SELECT` for the aggregated info you wanted, such as `MAX`(_sell_) value (aliased as "Max_Sell" or what have you) and the _division_, do a `GROUP BY` on _division_ (with this `SELECT` statement aliased as __t1__ or whatever alias you want for the first copy of the table).  This returns the `MAX` sell value per division.  This is good, but we also want to know which group had this maximum per division and who their manager was.  
+
+2. So we perform a straightforward second `SELECT` of _group_ and _manager_ from the same table but alias it as __t2__, etc.
+
+3. Now we `JOIN` these `SELECT` results from the same original table together on the columns from __t1__ only (i.e. the cols in __t1__ equal their counterpart in __t2__), forming a `SELF JOIN`.  We do not `JOIN` on the columns we selected from __t2__, since that was the whole point of using a Self `JOIN` to begin with -- to perform operations on copy of the table while also being able to select information from the original, un-operated-on table.
+
+4. Last we make an overall "umbrella" `SELECT` statement from the now-joined tables, grabbing only the info we want.  Technically speaking, the `SELECT` statements in \#1 and \#2 are called _sub-queries_, but when I think of the process for doing a Self `JOIN`, I think of them as two independent selections we just join together and make a final selection from.
+
+5. This example query would look like this:
+    ```sql
+    SELECT t1.division, t1.max_sell, t2.group, t2.manager
+    FROM (
+        SELECT division, max(sell) AS max_sell
+        FROM div_sales
+        GROUP BY division ) AS t1
+    INNER JOIN (
+        SELECT group, manager
+        FROM div_sales ) AS t2
+        ON t1.division = t2.division
+        AND t1.max_sell = t2.sell
+    ORDER BY t1.division
+    ```
+
+One important point to make is that when using a Self `JOIN` since we are using sub-queries (sub-`SELECT`) we _must_ return each as an alias (here, `t1` and `t2`) and enclose it in parenthesis.
+
+Another important thing to note when using a Self `JOIN` is that it allows multiple answers of a same value.  So, in this case if multiple groups had sold the exact same amount within a division, the Self `JOIN` would return them all.  Window functions, shown below, do not.  They return only one result per value (which can be determined by order of the partition they use).
+
+<BR>
+
+#### Window Functions: OVER
+Window functions are basically equivalent to `.transform()` in Pandas.  They require a function, which can be an aggregate function like `AVG()`, `RANK()`, or `SUM()` but doesn't have to be, and then apply that function to the groups specified in the table.  How the table is grouped into separate divisions is specified in the `PARTITION BY` list (this is technically optional, though very commonly used; without it, the entire table is used which sort of obviates the need for the window partition to begin with).  They can also aliased using the `WINDOW` clause if multiple Window Functions are needed in a single query.
+
+Two good guides for Window Functions:
+1. [PostgreSQL - Window Functions](https://www.postgresql.org/docs/9.1/static/tutorial-window.html)
+2. [Mode Analytics - Window Function](https://community.modeanalytics.com/sql/tutorial/sql-window-functions/)
+
+Here is how we would use a Window Function to achieve the same result we got in the Self JOIN query above:
+
+1. `SELECT` the columns we want to return.
+
+2. Use a sub-query in our `FROM` statement which is where we use our Window Function.
+
+3. Choose the columns we want to be calculated for `OVER` the partitions. Here, _sell_, _group_, _manager_.
+
+4. `PARTITION BY` these columns on _division_, ordering them in descending order.  Each window function must be returned as an alias we are selecting for in our outer `SELECT` statement (I believe).
+
+5. Use `FIRST_VALUE()` to say we want the top value returned for our descending-sorted partitions.
+
+6. `GROUP BY` all four columns in our `SELECT` statement.
+
+7. Here's example code (have not tested this because this is a theoretical database; `jp_sql_practice.md` has real code used in FFT databases).
+
+    ```sql
+    SELECT division, sell AS max_sell, group, manager
+    FROM (
+        SELECT
+        division,
+        FIRST_VALUE(sell) OVER (PARTITION BY division ORDER BY sell DESC) AS sell,
+        FIRST_VALUE(group) OVER (PARTITION BY division ORDER BY sell DESC) AS group
+        FIRST_VALUE(manager) OVER (PARTITION BY division ORDER BY sell DESC) AS manager
+        FROM div_sales
+        ) AS sales
+    GROUP BY division, sell, group, manager
+    ORDER BY division;
+    ```
+
+
+
+
+
+
+
+#### UNION
+
+
+#### ALIASES
+
+#### EXISTS
+
+
+<BR><BR>
+
+### Creating and Modifying Tables
+#### CREATE DATABASE
+
+#### DROP DATABASE
+
+
+#### CREATE TABLE
+
+
+#### ALTER TABLE
+
+
+#### DROP TABLE
+
+
+
+
+#### UPDATE
+
+
+#### DELETE
+
+
+
+
+
+
+
+
+
 
 
 
@@ -524,37 +435,43 @@ The `FROM` clause says to merge data from the `goal` table with that from the `g
 
 
 <BR><BR><BR>
+<BR><BR><BR>
 
 #### SQL ZOO EXAMPLES:
 ***
 Show the countries which have a name that includes the word 'United'
 ```sql
-SELECT name FROM world
+SELECT name
+FROM world
 WHERE name LIKE 'United%'
 ```
 
 Show the countries that are big by area or big by population. Show name, population and area.
 ```sql
-SELECT name, population, area FROM world
+SELECT name, population, area
+FROM world
 WHERE area > 3000000 OR population > 250000000
 ```
 
 Exclusive OR (XOR).  
 Show the countries that are big by area or big by population but not both. Show name, population and area.
 ```sql
-SELECT name, population, area FROM world
+SELECT name, population, area
+FROM world
 WHERE population > 250000000 XOR area > 3000000
 ```
 
 Show the name and population in millions and the GDP in billions for the countries of the continent 'South America'. Use the `ROUND` function to show the values to two decimal places.
 ```sql
-SELECT name, ROUND(population/1000000, 2), ROUND(gdp/1000000000, 2) FROM world
+SELECT name, ROUND(population/1000000, 2), ROUND(gdp/1000000000, 2)
+FROM world
 WHERE continent = 'South America'
 ```
 
 Show the name and per-capita GDP for those countries with a GDP of at least one trillion (1000000000000; that is 12 zeros). `ROUND` this value to the nearest $1000. (note negative decimals for `ROUND` func)
 ```sql
-SELECT name, ROUND(gdp/population, -3) FROM world
+SELECT name, ROUND(gdp/population, -3)
+FROM world
 WHERE gdp >= 1000000000000
 ```
 
@@ -582,14 +499,16 @@ WHERE name LIKE 'A%' OR name LIKE 'B%'
 
 List the winners, year and subject where the winner starts with Sir. Show the winners by name order.
 ```sql
-SELECT * FROM nobel
+SELECT *
+FROM nobel
 WHERE winner LIKE 'Sir%'
 ORDER BY winner
 ```
 
 List the winners, year and subject where the winner starts with Sir. Show the the most recent first, then by name order.
 ```sql
-SELECT winner, yr, subject FROM nobel
+SELECT winner, yr, subject
+FROM nobel
 WHERE winner LIKE 'Sir%'
 ORDER BY yr DESC, winner
 ```
@@ -608,51 +527,78 @@ Select the code which shows the years when a Medicine award was given but no Pea
 SELECT DISTINCT yr
 FROM nobel
 WHERE subject='Medicine'
-AND yr NOT IN(SELECT yr FROM nobel WHERE subject='Literature')
-AND yr NOT IN (SELECT yr FROM nobel WHERE subject='Peace')
+AND yr NOT IN
+    (SELECT yr
+    FROM nobel
+    WHERE subject='Literature')
+AND yr NOT IN
+    (SELECT yr
+    FROM nobel
+    WHERE subject='Peace')
 ```
 
 
-##### nested select, distinct
+##### Subquery, DISTINCT
 Pick the code that shows the amount of years where no Medicine awards were given
 ```sql
-SELECT COUNT(DISTINCT yr) FROM nobel
-WHERE yr NOT IN (SELECT DISTINCT yr FROM nobel WHERE subject = 'Medicine')
+SELECT COUNT(DISTINCT yr)
+FROM nobel
+WHERE yr NOT IN
+    (SELECT DISTINCT yr
+    FROM nobel
+    WHERE subject = 'Medicine')
 ```
 
 
-##### nested select
+##### Using Subqueries (nested SELECTs)
 Select the code which would show the year when neither a Physics or Chemistry award was given
 ```sql
-SELECT yr FROM nobel
-WHERE yr NOT IN(SELECT yr FROM nobel WHERE subject IN ('Chemistry','Physics'))
+SELECT yr
+FROM nobel
+WHERE yr NOT IN
+    (SELECT yr
+    FROM nobel
+    WHERE subject IN ('Chemistry','Physics'))
 ```
 
 Show the population of China as a multiple of the population of the United Kingdom
 ```sql
-SELECT
-population/(SELECT population FROM world WHERE name='United Kingdom')
+SELECT population /
+    (SELECT population
+    FROM world
+    WHERE name='United Kingdom')
 FROM world
 WHERE name = 'China'
 ```
 
 Show each country that has a population greater than the population of ALL individual countries in Europe.
 ```sql
-SELECT name FROM world
+SELECT name
+FROM world
 WHERE population > ALL
-(SELECT population FROM world WHERE continent='Europe')
+    (SELECT population
+    FROM world
+    WHERE continent='Europe')
 ```
 
 List each country name where the population is larger than that of 'Russia'.
 ```sql
-SELECT name FROM world
-WHERE population > (SELECT population FROM world WHERE name = 'Russia')
+SELECT name
+FROM world
+WHERE population >
+    (SELECT population
+    FROM world
+    WHERE name = 'Russia')
 ```
 
 List the name and continent of countries in the continents containing eitherArgentina or Australia. Order by name of the country.
 ```sql
-SELECT name, continent FROM world
-WHERE continent IN (SELECT continent FROM world WHERE name = 'Argentina' OR name = 'Australia')
+SELECT name, continent
+FROM world
+WHERE continent IN
+    (SELECT continent
+    FROM world
+    WHERE name = 'Argentina' OR name = 'Australia')
 ORDER BY name
 ```
 
@@ -660,20 +606,25 @@ ORDER BY name
 Germany (population 80 million) has the largest population of the countries in Europe. Austria (population 8.5 million) has 11% of the population of Germany.
 Show the name and the population of each country in Europe. Show the population as a percentage of the population of Germany.
 ```sql
-SELECT name, CONCAT(ROUND(population / (SELECT population FROM world WHERE name = 'Germany') * 100, 0), '%')
+SELECT name, CONCAT(ROUND(population /
+    (SELECT population
+    FROM world
+    WHERE name = 'Germany') * 100, 0), '%')
 FROM world
 WHERE continent = 'Europe'
 ```
 
 For each continent show the continent and number of countries.
 ```sql
-SELECT continent, COUNT(name) FROM world
+SELECT continent, COUNT(name)
+FROM world
 GROUP BY continent
 ```
 
-List the continents that have a total population of at least 100 million.  (HAVING always comes after GROUP BY)
+List the continents that have a total population of at least 100 million.  (`HAVING` always comes after `GROUP BY`)
 ```sql
-SELECT continent FROM world
+SELECT continent
+FROM world
 GROUP BY continent
 HAVING SUM(population) > 100000000
 ```
@@ -681,7 +632,8 @@ HAVING SUM(population) > 100000000
 Show the player, teamid, stadium and mdate and for every German goal.
 ```sql
 SELECT player, teamid, stadium, mdate
-FROM game JOIN goal ON (game.id = goal.matchid)
+FROM game
+JOIN goal ON (game.id = goal.matchid)
 WHERE teamid = "GER"
 ```
 
@@ -689,7 +641,8 @@ WHERE teamid = "GER"
 Show the name of all players who scored a goal against Germany.
 ```sql
 SELECT DISTINCT player
-FROM goal JOIN game ON (game.id = goal.matchid)
+FROM goal
+JOIN game ON (game.id = goal.matchid)
 WHERE (team1 = 'GER' OR team2 = 'GER') AND teamid NOT IN ('GER')
 ```
 
@@ -697,14 +650,16 @@ WHERE (team1 = 'GER' OR team2 = 'GER') AND teamid NOT IN ('GER')
 Show teamname and the total number of goals scored.
 ```sql
 SELECT teamname AS 'Country', COUNT(player) AS 'Goals Scored'
-FROM goal JOIN eteam ON (goal.teamid = eteam.id)
+FROM goal
+JOIN eteam ON (goal.teamid = eteam.id)
 GROUP BY teamname
 ```
 
 For every match involving 'POL', show the matchid, date and the number of goals scored.
 ```sql
 SELECT matchid, mdate, COUNT(matchid)
-FROM game JOIN goal ON (game.id = goal.matchid)
+FROM game
+JOIN goal ON (game.id = goal.matchid)
 WHERE team1 = 'POL' OR team2 = 'POL'
 GROUP BY matchid, mdate
 ```
@@ -718,13 +673,15 @@ List every match with the goals scored by each team as shown. This will use `CAS
 10      June 2012	IRL	    1	    CRO	    3
 ...
 ```
+
 Notice in the query given every goal is listed. If it was a `team1` goal then a 1 appears in `score1`, otherwise there is a 0. You could `SUM` this column to get a count of the goals scored by `team1`. Sort your result by `mdate`, `matchid`, `team1` and `team2`.
 
 ```sql
 SELECT mdate, team1,
 SUM(CASE WHEN goal.teamid = game.team1 THEN 1 ELSE 0 END) Score1, team2,
 SUM(CASE WHEN goal.teamid = game.team2 THEN 1 ELSE 0 END) Score2
-FROM game LEFT JOIN goal ON (game.id = goal.matchid)
+FROM game
+LEFT JOIN goal ON (game.id = goal.matchid)
 GROUP BY mdate, matchid, team1, team2
 ```
 
@@ -733,37 +690,48 @@ Which were the busiest years for 'John Travolta', show the year and the number o
 ```sql
 SELECT yr, COUNT(title)
 FROM movie
-JOIN casting ON (movie.id = movieid)         
+JOIN casting ON (movie.id = movieid)
 JOIN actor ON (actorid = actor.id)
 WHERE name = 'John Travolta'
 GROUP BY yr
 
-HAVING COUNT(title) = (SELECT MAX(c)
-FROM
-(SELECT yr, COUNT(title) AS c
-FROM movie
-JOIN casting ON movie.id=movieid
-JOIN actor ON actorid=actor.id
-WHERE name='John Travolta'
-GROUP BY yr) AS t
-)
+HAVING COUNT(title) =
+    (SELECT MAX(c)
+    FROM
+        (SELECT yr, COUNT(title) AS c
+        FROM movie
+        JOIN casting ON movie.id=movieid
+        JOIN actor ON actorid=actor.id
+        WHERE name='John Travolta'
+        GROUP BY yr) AS t
+    )
 ```
-
 
 
 List the film title and the leading actor for all of the films 'Julie Andrews' played in.
 ```sql
 SELECT DISTINCT title, name
-FROM movie JOIN casting ON (casting.movieid = movie.id) JOIN actor ON (casting.actorid = actor.id)
-WHERE movieid IN (SELECT movieid FROM casting
-WHERE actorid IN (SELECT id FROM actor WHERE name='Julie Andrews')) AND ord=1
+FROM movie
+JOIN casting ON (casting.movieid = movie.id)
+JOIN actor ON (casting.actorid = actor.id)
+WHERE movieid IN
+    (SELECT movieid
+    FROM casting
+    WHERE actorid IN
+        (SELECT id
+        FROM actor
+        WHERE name='Julie Andrews')
+    )
+AND ord=1
 ```
 
 
 Obtain a list, in alphabetical order, of actors who've had at least 30 starring roles.
 ```sql
 SELECT name
-FROM movie JOIN casting ON (casting.movieid = movie.id) JOIN actor ON (casting.actorid = actor.id)
+FROM movie
+JOIN casting ON (casting.movieid = movie.id)
+JOIN actor ON (casting.actorid = actor.id)
 WHERE ord=1
 GROUP BY name
 HAVING COUNT(name) >= 30
@@ -773,7 +741,9 @@ HAVING COUNT(name) >= 30
 List the films released in the year 1978 ordered by the number of actors in the cast.
 ```sql
 SELECT title, COUNT(actorid)
-FROM movie JOIN casting ON (casting.movieid = movie.id) JOIN actor ON (casting.actorid = actor.id)
+FROM movie
+JOIN casting ON (casting.movieid = movie.id)
+JOIN actor ON (casting.actorid = actor.id)
 WHERE yr = 1978
 GROUP BY title
 ORDER BY COUNT(actorid) DESC
@@ -782,9 +752,12 @@ ORDER BY COUNT(actorid) DESC
 List all the people who have worked with 'Art Garfunkel'.
 ```sql
 SELECT actor.name
-FROM movie JOIN casting ON (casting.movieid = movie.id) JOIN actor ON (casting.actorid = actor.id)
-WHERE actor.name !='Art Garfunkel'
-AND movie.id IN (SELECT movie.id
-FROM movie JOIN casting ON (casting.movieid = movie.id) JOIN actor ON (casting.actorid = actor.id)
-WHERE actor.name='Art Garfunkel')
+FROM movie JOIN casting ON (casting.movieid = movie.id)
+JOIN actor ON (casting.actorid = actor.id)
+WHERE actor.name !='Art Garfunkel' AND movie.id IN
+    (SELECT movie.id
+    FROM movie
+    JOIN casting ON (casting.movieid = movie.id)
+    JOIN actor ON (casting.actorid = actor.id)
+    WHERE actor.name='Art Garfunkel')
 ```

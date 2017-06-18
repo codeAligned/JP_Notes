@@ -280,6 +280,12 @@ Bias v. Variance can be thought of much like Accuracy v. Reliability in science.
     <img height="400" src="/Users/jpw/Dropbox/Work/Galvanize/DSI_Camp/Week3/regularized-regression/images/bias_variance.png">
 </div>
 
+<div align="center">
+    <img height="400" src="images/visual_bias_variance.png">
+</div>
+
+
+
 + Bias (Accuracy):
   + High Bias = **Underfitting** and **Low complexity**
   + Bias can be thought of as how accurate we predict/model the true signal, the true data points.  With increased accuracy we have less bias.  
@@ -377,6 +383,7 @@ Classification Metrics II:
 
 + **ROC Curves - AUC** (Receiver Operator Characteristic)
   + AUC stands for "area under the curve". Like precision and recall, accuracy is divided into sensitivity and specificity and models can be chosen based on the balance thresholds of these values.  See below for more on ROC.
+  + Locate a given threshold of confidence/cutoff on the ROC curve by finding the recall (TP) for that cutoff.
 
 
 Confusion Matrix:
