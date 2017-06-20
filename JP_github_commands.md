@@ -77,17 +77,6 @@ __Note 2:__ `git remote set-url origin <URL>` is a similar command to \#4, `git 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 #### Github Notes:
 
 **Git & Github Terminal Commands:**  

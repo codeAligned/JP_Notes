@@ -111,6 +111,7 @@ We can also export any database we are working with in Postgres to a .sql file o
     2. Create an empty table to import the .csv data into.  One table per .csv file.  When we create a new table we have to name it ("nfl_table"), list each column and the data type of the column (consult my `jp_sql_notes.md` file for more detail on this).  Note I believe that the column names we want to fill with data here must match the column names in the .csv file, since they will be imported directly.  I'm not positive of this, but I've never seen it done differently.  Continuing with the football database, here's an example table we'd see.  
 
         ```sql
+        DROP TABLE IF EXISTS nfl_table; 
         CREATE TABLE nfl_table (
             ID              SERIAL NOT NULL PRIMARY KEY,
             Year            INT,
