@@ -5,9 +5,10 @@
 
 ### Important Clarification about Virtual Environments regarding PIP and Anaconda:
 ##### Anaconda Virtual Env
-When using a virtual env ("venv") in Anaconda (`conda create -n [venv name] python=X anaconda`), if you wish to install or modify packages in this venv, you must activate it first (`source activate [venv name]`) and then using `conda` *only* can you modify the packages in this environment.  
+When using a virtual env ("venv") in Anaconda (`conda create -n [venv name] python=X`), if you wish to install or modify packages in this venv, you must activate it first (`source activate [venv name]`) and then using `conda` *only* can you modify the packages in this environment.  
 
-**Note**: using the command above to create the venv with `anaconda` appended to the end will create a new venv with the full Anaconda distribution already installed.  From here, you can modify the version of a given package.  This approach creates a venv with more packages than are often required, but simplifies the creation and package managing process for the most part.  
+**Note:**  
+Using the command above to create the venv with `anaconda` appended to the end (ex: `conda create -n [venv name] python=X anaconda`) will create a new venv with the _full Anaconda distribution already installed_.  From here, you can modify the version of a given package.  This approach creates a venv with way more packages than are usually going to be needed, of course, making it fairly wasteful space-wise.  In general we will want to create a blank venv and then populate it with the specific packages of interest for our project.  However, I wanted to note this option.  
 
 ##### PIP Virtual Env ("Vanilla")
 The below quote is from the [Conda cheatsheet](https://conda.io/docs/_downloads/conda-cheatsheet.pdf), being in an active venv and installing a package via `pip` does indeed install that package only into the active venv and not into your global Python installation.  (This is a good thing).
@@ -45,9 +46,33 @@ Command | Action
 
 
 Common packages used (beware of cross-dependencies!):  
-numpy **|** pandas **|** matplotlib **|** flask **|** scipy **|** scikit-learn **|** scikit-image **|** seaborn **|** selenium **|** six **|** SQLAlchemy **|**  
-Werkzeug **|** numexpr **|** pymc **|** psql **|** psutil **|** psycopg2 **|** pymongo **|** bokeh **|** beautifulsoup4 **|** Flask **|**  
-ghp-import (*github pages* for *Pelican* static site publishing) **|** ipython **|** Jinja2 **|** jupyter **|** mrjob **|** nbformat
++ numpy
++ pandas
++ matplotlib
++ flask
++ scipy
++ scikit-learn
++ scikit-image
++ seaborn
++ selenium
++ six
++ SQLAlchemy
++ Werkzeug
++ numexpr
++ pymc
++ psql
++ psutil
++ psycopg2
++ pymongo
++ bokeh
++ beautifulsoup4
++ Flask
++ ghp-import (*github pages* for *Pelican* static site publishing)
++ ipython
++ Jinja2
++ jupyter
++ mrjob
++ nbformat
 
 ### Current list of virtual environments I have set up:
 `conda info --envs`

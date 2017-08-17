@@ -1,6 +1,10 @@
 # JP Pandas and Numpy Notes:
 
 ## Pandas
+
+[Great article on optimizing Pandas performance](https://tomaugspurger.github.io/modern-4-performance.html)
+
+
 ***
 When using importing a .csv in pandas, the first steps you should take to ensure things will work are:
 
@@ -22,7 +26,40 @@ check out `pd.melt(df)` -- neat function for reorganizing a DF by "ungrouping" o
 np.bincount([iterable_name])
 ```
 
+
+#### Categorical Data for Performance
+`pd.Categorical` -- special dtype for huge speed boost (converts col to a C-array for Pandas) for categorical data; obviously applies best to columns with many repeated entries, such as gender.  Stores in single bytes instead of KB+ for Python's "object" dtypes.  Learn and use.  See [this write up](https://www.continuum.io/content/pandas-categoricals)
+(`.astype('category')`)
+`df['CategoryCol'].cat.codes`
+`df['CategoryCol'].cat.categories`
+
+
+
+
+When running into "index not unique" issues, converting DF to a MultiIndex is commonly a sensible solution (since having repeated entries in the index suggest there are groups of repeated data/categories/fields).  Using `df.set_index` to specific columns to create a hierarchy will result in a unique index.  Of course, a brute force (and possibly unhelpful/unwise choice is to simply use `df.reset_index()` which gives a new integer range index, but this might confuse your results!)
+
+
+`df.sort_index(axis=)`
+`df.index.is_unique`
+
 `pd.isnull(df).any(1).nonzero()[0]`
+
+
+
+`pd.MultiIndex`
+`pd.IndexSlice` (jeff reback video @ 38:49)
+
+`df.where()`
+`df.mask()`
+`df.assign` -- create new col, but can do it _in line_, which is great for chained methods.
+`df.select_dtypes()`
+`df.get_level_values()`
+`df.reindex()`
+`df.droplevel()`
+`df.unstack()`
+`df.isnull()` / `pd.isnull(df)`
+`df.notnull()`...
+
 
 
 Access or change the `name` attribute of both columns and index:
@@ -44,7 +81,7 @@ There are multiple ways to shorten this -- though not vectorize it, unfortunatel
 
 ##### 1. `np.where()`
 ```python
-df = pd.DataFrame({'Col_A':list('ZZXYW'), 'Col_B':list('ABBCD')})
+df = pd.DataFrame({'Col_A': list('ZZXYW'), 'Col_B': list('ABBCD')})
 df['New_Col'] = np.where(df['Col_A']=='Z', 'green', 'red')
 print(df)
 
@@ -441,6 +478,19 @@ df = pd.concat([df, tmp_df], axis=1)
 ```
 
 
+### Subset sorting
+Don't sort an entire DF if you're only interested in the n-largest or n-smallest values in the DF.  Instead use Pandas' built-in `nlargest` and `nsmallest` methods.
+```python
+# Bad:
+In [1]: delays.sort_values().tail(5)
+>>> 63.3 ms per loop
+
+# Good:
+In [2]: delays.nlargest(5).sort_values()
+>>> 12.3 ms per loop
+```
+
+
 ### Append, Concat, Join, and Merge
 Pandas can be tricky with these four options.  From my experience, they break down as follows: `append` and `concat` are similar, and `join` and `merge` are similar.  By default, `merge()` looks to join on common columns, `join()` on common indices, and `concat()` by just appending on a given axis.
 
@@ -487,10 +537,97 @@ Boom. Done.
 
 
 
-
-
-
 dfm3.merge(dfc3, how='outer')
+
+
+
+
+
+
+##### Stack/Unstack
+Here is a [great overview blog post](http://nikgrozev.com/2015/07/01/reshaping-in-pandas-pivot-pivot-table-stack-and-unstack-explained-with-pictures/)
+> Let us assume we have a DataFrame with MultiIndices on the rows and columns. Stacking a DataFrame means moving (also rotating or pivoting) the innermost column index to become the innermost row index. The inverse operation is called unstacking. It means moving the innermost row index to become the innermost column index.
+
+Example using FFT DF:
+```python
+In [1]: df = pd.read_csv('~/Desktop/fft_class_stats.csv')
+In [2]: df = df[df['Association'] == 'Generic']
+In [3]: df.shape
+Out [3]: (23, 20)
+In [4]: df.head()
+Out [4]: >>>
+```
+
+```bash
+   Job_ID      Job Identity  Gender  Level     Role Association  HPm  MPm  \
+70     4A   Squire   Squire  Either      1   Squire     Generic  100   75   
+71     4B  Chemist  Chemist  Either      1  Chemist     Generic   80   75   
+72     4C   Knight   Knight  Either      1   Squire     Generic  120   80   
+73     4D   Archer   Archer  Either      1   Squire     Generic  100   65   
+74     4E     Monk     Monk  Either      1   Squire     Generic  135   80   
+
+    PAm  MAm  SPm  Move  Jump     CEV  HPc  MPc  PAc  MAc  SPc  
+70   90   80  100     4     3    0.05   11   15   60   50  100  
+71   75   80  100     3     3    0.05   12   16   75   50  100  
+72  120   80  100     3     3    0.10   10   15   40   50  100  
+73  110   80  100     3     3    0.10   11   16   45   50  100  
+74  129   80  110     3     4    0.20    9   13   48   50  100
+```
+
+In order to `stack` or `unstack`, we need a MultiIndex (technically we can do it on a "flat" (2D, no nested indices) DF, but the result is just a `Series` that has either the rows or cols nested into the other, depending upon whether you stack or unstack).  If your DF is currently flat the primary way to create a hierarchy of indices (a MultiIndex)  is to use `set_index()`.  The flow of this operation is to choose columns in the existing DF to become part of the index (rows), and then choose which of those to become part of the columns nested structure.  
+
+Using the example DF above, we would choose some columns (commonly the categorical ones) to be in our index.  Then we will choose to unstack either a specific index level or many of them.  By default `unstack` moves the _innermost_ row index to become _innermost_ column index.  Index levels are ordered outside-in, meaning the outermost index is level=0, the one immediately to the right of level 0 is level=1, and so on as the nesting of indices increases.  When calling `unstack` or `stack`, we can specify which level of index we want to move by either the number of the level or giving the name of the index itself.  By default the methods use `-1` as the level, which means the _innermost_ level (i.e. most nested).  
+
+Here's an example using the FFT DF:  
+
+1. Choose two (categorical) columns to be the index.  Order matters, here, as the first column named becomes the outermost index and they nest progressively after that. Then unstack the inner one (Role) to now be the new innermost column index.  Note the base `df` has no column (or row) nesting, so by unstacking the inner row index here (Role) we are going to place it as the inner column index under the existing columns, leaving 'Job' as the index for the rows.
+
+2. The default `.unstack()` call is equivalent to `.unstack(1)` or `.unstack('Role')` in this case because 'Role' is level 1, and this is the innermost index level here.  This is also equivalent to `.unstack(-1)` which means the innermost level.  If we had three or more indices to begin with we could choose any sub-selection of them to unstack/stack.
+    ```python
+    In [1]: df_unstack = df.set_index(['Job', 'Role']).unstack('Role')
+    In [2]: df_unstack.head()
+    Out [2]: >>>
+    ```
+    ```bash
+                Job_ID                    Identity                    Gender                    
+    Role       Chemist Generic Squire      Chemist Generic  Squire   Chemist Generic  ...
+    Job                                                                             
+    Archer        None    None     4D         None    None  Archer      None    None  ...
+    Bard            5B    None   None         Bard    None    None    Either    None  ...
+    Calculator      5A    None   None   Calculator    None    None    Either    None  ...
+    Chemist         4B    None   None      Chemist    None    None    Either    None  ...
+    Dancer        None    None     5C         None    None  Dancer      None    None  ...
+    ...
+    ...
+
+    ```
+
+    We see that the new, unstacked DF indeed has 'Job' as the index for the rows and the 'Role' index is now the innermost column index.  This means for every column in the original DF ('Identity', 'Gender', 'Level', ... etc.) now have their own nested columns of 'Role' (which itself has three categories: 'Chemist', 'Generic', 'Squire').
+
+    If we want to see the names of the levels for the rows or columns we can just use the `.names` attribute:  
+    ```python
+    In [1]: df_unstack.index.names
+    Out [1]: FrozenList(['Job'])
+
+    In [2]: df_unstack.columns.names
+    Out [2]: FrozenList([None, 'Role'])     # None is original set of cols, unnamed upon original import.
+    ```
+
+
+`df.swaplevel` and `df.reorder_levels` can be used to rearrange a multiindex.
+
+`df.columns.get_level_values(0)`
+
+
+
+
+
+
+
+
+
+example from pellucid using `large_df_trial.csv`:  
+`df = df.set_index(['companyId', 'raw_date', 'fe_item', 'fe_per_rel', 'periodicity']).unstack(['fe_item', 'fe_per_rel', 'periodicity'])`
 
 
 

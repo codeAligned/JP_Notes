@@ -25,6 +25,18 @@ To open the file we use the `open()` command.  By default, Python makes the open
 #### Command Line
 Use `htop` in a new window to monitor computer performance, such as memory and CPU%.
 
+Use `python -c "import sys; print('\n'.join(sys.path))"` to see which paths are included in your PYTHONPATH.
+
+Or this in a script/ipython:
+```python
+import os
+try:
+    user_paths = os.environ['PYTHONPATH'].split(os.pathsep)
+except KeyError:
+    user_paths = [])
+```
+
+
 
 #### if / elif / else
 Can make single line statements for brevity.  Best to only use these when the statement is simple and short, otherwise readability diminishes and the purpose of the `if` block becomes confusing.
@@ -916,3 +928,9 @@ print x,
 ```python
 new_dic = sorted(dic.items(), key=lambda item: item[...] reverse=T/F)
 ```
+
+
+
+
+### iterate through functions in a module
+https://stackoverflow.com/questions/21885814/how-to-iterate-through-a-modules-functions
