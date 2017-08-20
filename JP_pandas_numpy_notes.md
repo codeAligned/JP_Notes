@@ -14,10 +14,8 @@ When using importing a .csv in pandas, the first steps you should take to ensure
 4. check col names for spaces, and clean them up with:
 
 ```python
-df2 = df.copy()
-cols = df2.columns.tolist()
-cols = [col.replace(' ', '_') for col in cols]
-df2.columns = cols
+cols = [col.replace(' ', '_') for col in df.columns.tolist()]
+df.columns = cols
 ```
 
 check out `pd.melt(df)` -- neat function for reorganizing a DF by "ungrouping" or "melting" a DF and reorganizing by a specified column and value.
@@ -60,6 +58,8 @@ When running into "index not unique" issues, converting DF to a MultiIndex is co
 `df.isnull()` / `pd.isnull(df)`
 `df.notnull()`...
 
+
+`df.rename(columns={})`
 
 
 Access or change the `name` attribute of both columns and index:

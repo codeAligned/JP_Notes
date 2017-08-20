@@ -103,10 +103,10 @@ Understanding *why* we use certain distributions to model our data is the import
 
 If we don't know the parameters of an obersved dist, we can estimate them using various techniques.  The two we are covering are:
 + Model of Moments (MOM)
-  + Older, but still effective in general.
++ Older, but still effective in general.
 
 + Maximum Likelihood Estimation (MLE)
-  + Ubiquitous method in general data science and statistics for estimating parameters.  See slides from Week 2 for more detail.  In short, it is a cost function and attempts to maximize it for your data points and given parameter.
++ Ubiquitous method in general data science and statistics for estimating parameters.  See slides from Week 2 for more detail.  In short, it is a cost function and attempts to maximize it for your data points and given parameter.
 
 **Sampling Distribution**  
 The distribution of a repeatedly sampled parameter from a parent population (or parent sample).
@@ -125,11 +125,11 @@ Note that by the design of hypothesis testing, we are more likely to fail to rej
 1. State Null and Alt. hypotheses
 2. Calculate Test Statistic based on distribution(s) of stat(s).
 3. Obtain p-value.
-    + Probability of getting your data (or something more extreme) given that the null hypo is true.  Smaller = less likely to get the observed results by mere chance.  
++ Probability of getting your data (or something more extreme) given that the null hypo is true.  Smaller = less likely to get the observed results by mere chance.  
 4. Compare p-value to α threshold.
-    + If p-val is less than a pre-set threshold, called the α level, then we can say that the observed result is real/true/valid at an α confidence level, such as 95%.  A good way to think of α is as the Type I Error Rate, which is the amount of error (False Positives) you are willing to tolerate.  So, an α = .05 means we would be willing to accept a failure rate of 5%, assuming the hypothesis test passed.
++ If p-val is less than a pre-set threshold, called the α level, then we can say that the observed result is real/true/valid at an α confidence level, such as 95%.  A good way to think of α is as the Type I Error Rate, which is the amount of error (False Positives) you are willing to tolerate.  So, an α = .05 means we would be willing to accept a failure rate of 5%, assuming the hypothesis test passed.
 5. State conclusion in terms of the problem.
-    + Properly stated as either we "reject" or "fail to reject" the null hypo.  Assuming p-val < α, mathematically speaking, we haven't absolutely 'confirmed' the alt. hypo.  Other explanations for our observed data may still exist, but we can say with α confidence that, whatever the source, the data we observed is not due to random chance.  When using multiple hypo tests, say 20, we should divide the α value by the number of tests performed, and use that as our new α threshold.  So, say α = .05 and we did 20 tests, we would use .05/20 = .01 as our new α value.
++ Properly stated as either we "reject" or "fail to reject" the null hypo.  Assuming p-val < α, mathematically speaking, we haven't absolutely 'confirmed' the alt. hypo.  Other explanations for our observed data may still exist, but we can say with α confidence that, whatever the source, the data we observed is not due to random chance.  When using multiple hypo tests, say 20, we should divide the α value by the number of tests performed, and use that as our new α threshold.  So, say α = .05 and we did 20 tests, we would use .05/20 = .01 as our new α value.
 
 α: Type I Error (False Positive)
 β: Type II Error (False Negative)
@@ -145,21 +145,21 @@ Version | Users | Purchases | Clicks
 2       | 400   | 15        | 100
 3       | 350   | 30        | 150
 
-  + null: V1 = V2 = V3
-  + alt: at least 1 site is diff
-  + 3 tests = 3-choose-2 = 3
-  + Modified α = .05 / 3 =
-  + We will take the
-  + There is a raw approach to this since we do have actual real data:
-    1. Take a sample from each of the three  versions
-    2. Bootstrap that sample for each version
-    3. Subtract the statistic from Version A from Version B (i.e. mean A from bootstrap A from mean B from bootstrap B)
-    4. Repeat steps 2 & 3 many times
-    5. Plot the resulting sampling distribution of differences
-    6. Throw away the top 2.5% and bottom 2.5%
-    7. We now have the inner 95% range, and can say we expect the true mean for the given version to lie within this range at a 95% confidence level
-    8. IF this range contains zero (i.e. if the number zero is in our 95% plot range) then we say that there is no observed difference between these two versions.
-    9. The advantage of this is that it is real data and is not based upon any assumption about the underlying distribution, so no asymptotic assumptions (or equations) need be used.
++ null: V1 = V2 = V3
++ alt: at least 1 site is diff
++ 3 tests = 3-choose-2 = 3
++ Modified α = .05 / 3 =
++ We will take the
++ There is a raw approach to this since we do have actual real data:
+1. Take a sample from each of the three  versions
+2. Bootstrap that sample for each version
+3. Subtract the statistic from Version A from Version B (i.e. mean A from bootstrap A from mean B from bootstrap B)
+4. Repeat steps 2 & 3 many times
+5. Plot the resulting sampling distribution of differences
+6. Throw away the top 2.5% and bottom 2.5%
+7. We now have the inner 95% range, and can say we expect the true mean for the given version to lie within this range at a 95% confidence level
+8. IF this range contains zero (i.e. if the number zero is in our 95% plot range) then we say that there is no observed difference between these two versions.
+9. The advantage of this is that it is real data and is not based upon any assumption about the underlying distribution, so no asymptotic assumptions (or equations) need be used.
 
 
 
@@ -243,14 +243,14 @@ In most of our Machine Learning we will focus on Supervised learning.
 
 
 + Five Assumptions of Linear Regression:
-  + X and Y are linearly related (Note: this does not mean X var has to be linear -- can be log or exponential, just the relationship has to be linear)
-  + Homoscedasticity of residuals (variance is equal across the range of values)
-  + Normally distributed residuals
-  + No multicolinearity among features (Variance Inflation Factors - **VIF**)
+  1. X and Y are linearly related (Note: this does not mean X var has to be linear -- can be log or exponential, just the relationship has to be linear)
+  2. Homoscedasticity of residuals (variance is equal across the range of values)
+  3. Normally distributed residuals
+  4. No multicolinearity among features (Variance Inflation Factors - **VIF**)
     + VIF > 10: suggests pulling features out of regression
     + VIF > 5: review this term to check for colinearity with another term of similar VIF.
     + Regularization methods are the most common for choosing which terms to keep.
-  + Independence of the observations (For example, independence assumption violated if data is a time series)
+  5. Independence of the observations (For example, independence assumption violated if data is a time series)
     + Dependent variable (y) is continuous, Independent variable (x) can be continuous or discrete
     + Categorical values (names, field, etc.) will be converted to *dummy variables*
 

@@ -934,3 +934,18 @@ new_dic = sorted(dic.items(), key=lambda item: item[...] reverse=T/F)
 
 ### iterate through functions in a module
 https://stackoverflow.com/questions/21885814/how-to-iterate-through-a-modules-functions
+
+
+
+
+
+
+## View function definition
+Use double question marks.  
+`function_name??` will print the source code.
+
+For something imported you can use
+```python
+import inspect
+print(inspect.getsource(function_name))
+```
