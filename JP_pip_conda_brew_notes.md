@@ -91,8 +91,8 @@ Command | Effect
 --------|--------
 `conda env -help` | List of all Conda commands
 `conda create -name [your_env_name] python=X.x anaconda` | Creates the virtual env. <br> For Python version, can use general version [`2` or `3`] or specify point version [e.g. `2.7` or `3.5`, etc.]
-`source activate python3` | Activates virtual env
-`source deactivate python3` | Deactivates virtual env
+`source activate [env name]` | Activates virtual env
+`source deactivate [env name]` | Deactivates virtual env
 `conda info -envs` | Verify current environment
 `conda env list` | Lists all virtual env
 `conda create -name [new_name] -clone [env_to_clone]` | clone an existing env with a new name.

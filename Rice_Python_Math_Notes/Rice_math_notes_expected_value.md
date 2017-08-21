@@ -1,0 +1,15 @@
+# Expected Value
+
+In some computer science departments, one third of the students in a department have a GPA of 2.0, one third have a GPA of 3.0, and one third have a GPA of 4.0. Suppose that we choose a student at random from this department. What do you expect the students GPA to be? The answer is 3.0, since the mean, or average, GPA is (2.0 + 3.0 + 4.0)/3 = 3.0. This value (the mean) is also called the expected value (that is, we say that the expected GPA of a student in this CS department is 3.0).
+
+At the same university, but in the biology department, half of the students have a GPA of 3.0 and the other half have a GPA of 4.0. What is the expected GPA of a biology student in this university? The answer is (3.0+4.0)/2=3.5. In other words, if we choose a biology student at random from this university, we expect the student's GPA to be 3.5. Notice that the expected value in this case does not make sense as we understand the term "expect," since no student in our case has a GPA of 3.5. The interpretation of the expected value here is the mean, or average, GPA.
+
+Let's now turn back to an example involving dice. What is the expected outcome of a single roll of a fair six-sided die? The answer is (1+2+3+4+5+6)/6=3.5. Of course, 3.5 has a probability of 0 being the outcome of this trial. But, again, the interpretation of the expected value here is that 3.5 is the average of the values we get if we had rolled this die an infinite number of times.
+
+Notice that in the three examples above we divided by 3, 2, and 6, respectively. The reason for this is in these three cases, the values 1/3, 1/2, and 1/6 are the probabilities of the relevant outcomes, respectively. That is, the probability of each possible outcome in the fair die trial is 1/6. So, we can rewrite the formula for the expected value as (1/6)\*1 + (1/6)\*2 + (1/6)\*3 + (1/6)\*4 + (1/6)\*5 + (1/6)\*6 = 3.5.
+
+More generally, if the possible outcomes of a trial have value x<sub>1</sub>, x<sub>2</sub>, ..., x<sub>k</sub> and their probabilities are p<sub>1</sub>, p<sub>2</sub>, ..., p<sub>k</sub>, respectively, then the expected value of this trial is ∑<sub>i=1</sub><sup>k</sup> p<sub>i</sub> × x<sub>i</sub>. As an example, consider the case where we roll two fair six-sided dice and consider their sum as possible outcomes of the trial. In this case, the set of possible outcomes is {2,3,4,5,6,7,8,9,10,11,12}. To compute the expect value of this sum, we need to determine the probability of each of these outcomes.
+
+In this case, there are 36 possible rolls if the values of the pair of dice are treated as an ordered tuple. There is one possible tuple (1,1) that yields a sum of two so p<sub>2</sub> = 1/36. Likewise, there are two possible tuples (1,2) and (2,1) that yield a sum of three so p<sub>3</sub> = 2/36 = 1/18. Continuing this analysis, p<sub>i</sub> = 1/36 \* (6 − abs(7−i)). Applying our formula for expected value, we arrive at the expression:
+
+1/36 \* 2 + 2/36 \* 3 + 3/36 \* 4 + 4/36 \* 5 + 5/36 \* 6 + 6/36 \* 7 + 5/36 \* 8 + 4/36 \* 9 + 3/36 \* 10 + 2/36 \* 11 + 1/36 \* 12 = 7.
