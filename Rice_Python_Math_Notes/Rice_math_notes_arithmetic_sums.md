@@ -19,10 +19,10 @@ The sum of a linear expression in _n_ is a quadratic polynomial in _n_.
 + ∑<sub>i=0</sub><sup>n</sup> i = 0 + 1 + 2 + ... + n = 1/2 \* (n + 1)n   
 This sum is known as a triangular sum. The sum of a linear expression in _i_ is also a quadratic polynomial in _n_.
 
-+ ∑<sub>i=0</sub><sup>n</sup> 2<sup>i</sup> = 2<sup>0</sup> + 2<sup>1</sup> + 2<sup>2</sup> + ... + 2<sup>n</sup> = 2<sup>n+1</sup>−1   
++ ∑<sub>i=0</sub><sup>n</sup> 2<sup>i</sup> = 2<sup>0</sup> + 2<sup>1</sup> + 2<sup>2</sup> + ... + 2<sup>n</sup> = 2<sup>n+1</sup> − 1   
 This sum is known as a geometric sum. In most cases, the sum of a sequence of exponential expressions is again exponential.
 
-+ ∑<sub>i=0</sub><sup>n</sup> αi = α<sup>0</sup> + α<sup>1</sup> + α<sup>2</sup> + ... + α<sup>n</sup> = α<sup>n+1</sup>−1 / (α − 1)   
++ ∑<sub>i=0</sub><sup>n</sup> αi = α<sup>0</sup> + α<sup>1</sup> + α<sup>2</sup> + ... + α<sup>n</sup> = α<sup>n+1</sup> −1 / (α − 1)   
 Note that this relation holds as long as α≠1. If 0<α<1 and the sum is infinite, i.e. n=∞, the sum reduces to 1 / (1−α).
 
 + ∑<sub>i=1</sub><sup>n</sup> 1/i = 1 + 1/2 + 1/3 + ... + 1/n ≈ log(n) + γ   
