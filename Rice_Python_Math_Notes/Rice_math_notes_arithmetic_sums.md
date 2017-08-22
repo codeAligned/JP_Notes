@@ -4,7 +4,7 @@ In counting the number of steps executed during the evaluation of loops or neste
 ### Notation
 An arithmetic sum is the operation of adding a sequence of numbers. If we index the numbers in the sequence by the subscript i, the arithmetic sum can be expressed mathematically in the form
 
-∑<sub>i</sub> = 0<sub>nai</sub> = a<sub>0</sub> + a<sub>1</sub> + a<sub>2</sub> + ...a<sub>n</sub>.
+∑<sub>i=0</sub><sup>n</sup> ai = a<sub>0</sub> + a<sub>1</sub> + a<sub>2</sub> + ...a<sub>n</sub>.
 Note that, as opposed to Python, both the lower bound (zero) and the upper bound (n) are also included in the sum.
 
 #### Common arithmetic sums and their solutions
