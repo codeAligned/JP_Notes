@@ -62,7 +62,7 @@ To see what all hotkeys are type __Cmd__ + __Shift__ + __P__.
 
 
 
-
+<BR>
 
 ### Extra Packages
 Here are a few third-party packages (there are thousands out there) that are useful and reliable.
@@ -80,3 +80,13 @@ Here are a few third-party packages (there are thousands out there) that are use
 + `Autoclose HTML` - For those writing HTML this is a nice way to ensure you don't have dangling tags.  Every time you start a new HTML tag with the opened angle bracket, this package creates the closing angled bracket for that tag.  Convenient.
 
 + ...various others including Github integration packages.  
+
+<BR>
+
+### Open Atom from Terminal
+Click 'Atom' in the menubar up top and choose __Install Shell Commands__.
+Now you can use commands in the terminal to open files or folders with Atom
+
++ `atom .` -- opens current terminal directory in Atom
++ `atom <filename>` -- opens file in Atom (good for hidden files)
++ `atom` -- opens a new Atom window
