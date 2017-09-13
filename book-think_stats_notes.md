@@ -307,8 +307,8 @@ The distributions we have used so far are called _empirical distributions_ becau
 
 The alternative is an _analytic distribution_, which is characterized by a CDF that is a mathematical function. Analytic distributions can be used to model empirical distributions. In this context, a model is a simplification that leaves out unneeded details. This chapter presents common analytic distributions and uses them to model data from a variety of sources.
 
-### Exponential Distribution
 
+### Exponential Distribution
 $$
 CDF(x) = 1 − e^{−λx}
 $$
@@ -458,3 +458,26 @@ This shows the CCDF of populations on a _log-log scale_. The largest 1% of citie
 <img src="images/cdf_log-x_norm_prob_plot_log_data_populations.png" width="700" height="350">
 
 This plot shows the CDF of populations and a lognormal model (left), and a normal probability plot (right). Both plots show good agreement between the data and the model.  Neither model is perfect. The Pareto model only applies to the largest 1% of cities, but it is a better fit for that part of the distribution. The lognormal model is a better fit for the other 99%. Which model is appropriate depends on which part of the distribution is relevant.
+
+
+#### Chapter 5 Glossary
++ __empirical distribution__:  
+    The distribution of values in a sample.
+
++ __analytic distribution__:  
+    A distribution whose CDF is an analytic function.
+
++ __model__:  
+    A useful simplification. Analytic distributions are often good models of more complex empirical distributions.
+
++ __interarrival time__:  
+    The elapsed time between two events.
+
++ __complementary CDF__:  
+    A function that maps from a value, x, to the fraction of values that exceed x, which is 1 − CDF(x).
+
++ __standard normal distribution__:  
+    The normal distribution with mean 0 and standard deviation 1.
+
++ __normal probability plot__:  
+    A plot of the values in a sample versus random values from a standard normal distribution.
