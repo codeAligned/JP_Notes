@@ -347,7 +347,7 @@ The normal distribution, also called _Gaussian_, is commonly used because it des
 
 The normal distribution is characterized by two parameters: the mean, $μ$, and standard deviation $σ$. The normal distribution with $μ = 0$ and $σ = 1$ is called the _standard normal distribution_. Its CDF is defined by an integral that does not have a closed form solution, but there are algorithms that evaluate it efficiently. One of them is provided by SciPy: `scipy.stats.norm` is an object that represents a normal distribution; it provides a method, `cdf`, that evaluates the standard normal CDF.
 
-![gaussian cdf](images/gaussian_cdf.png?v=4&s=300)
+![gaussian cdf](images/gaussian_cdf.png?s=300)
 
 ##### Checking for Normality
 Matching the CDF of a normal distribution with best-fit parameters to a CDF of real data, such as birth weights or inter-arrival times, is one way to determine if a normal distribution would serve as a good model for the data.  Another way is to use a _probability plot_.  
