@@ -355,5 +355,5 @@ Matching the CDF of a normal distribution with best-fit parameters to a CDF of r
 #### Probability Plot
 Here's the "easy" way to make a probability plot.
 1. Sort the values in the sample.  
-2. From a standard normal distribution ($μ = 0$ and $σ = 1$), generate a random sample with the same size as the sample, and sort it.  
+2. From a standard normal distribution (\$μ = 0\$ and \$σ = 1\$), generate a random sample with the same size as the sample, and sort it.  
 3. Plot the sorted values from the sample versus the random values.
