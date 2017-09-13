@@ -5,7 +5,6 @@ Many passages below are directly from the book and were simply things I enjoyed 
 
 
 ## Empirical Distributions
-
 ### 2. Histograms
 Counts up items in a list / series / sample and tells you how many times they appear, or their _frequency_.  Helps reveal the distribution of the data.  
 
@@ -66,7 +65,7 @@ $$
 
 where $x_1$ and $x_2$ are the means of the groups and $s$ is the “pooled standard deviation.”
 
-Here’s the Python code that computes Cohen’s $d$:
+Here’s the Python code that computes Cohen’s _d_:
 
 ```python
 def CohenEffectSize(group1, group2):
@@ -244,7 +243,7 @@ The difference between “percentile” and “percentile rank” can be confusi
 
 ### CDF
 The CDF is the function that maps from a _value_ to its _percentile rank_.
-The CDF is a function of $x$, where $x$ is any value that might appear in the distribution. To evaluate $CDF(x)$ for a particular value of $x$, we compute the fraction of values in the distribution less than or equal to $x$.
+The CDF is a function of _x_, where _x_ is any value that might appear in the distribution. To evaluate _CDF(x)_ for a particular value of _x_, we compute the fraction of values in the distribution less than or equal to _x_.
 
 Here’s what that looks like as a function that takes a sequence, `sample`, and a value, `x`:
 
@@ -270,7 +269,7 @@ CDF(3) = 0.8
 __CDF(4) = 0.8__  
 CDF(5) = 1
 
-Note the two bold items, 0 and 4.  We can evaluate the CDF for any value of $x$, not just values that appear in the sample. If $x$ is less than the smallest value in the sample, $CDF(x)$ is 0.  If it's greater than the largest value, $CDF(x)$ is 1.  Since the increments are discrete, a CDF is what's known as a _step function_.
+Note the two bold items, 0 and 4.  We can evaluate the CDF for any value of _x_, not just values that appear in the sample. If _x_ is less than the smallest value in the sample, _CDF(x)_ is 0.  If it's greater than the largest value, _CDF(x)_ is 1.  Since the increments are discrete, a CDF is what's known as a _step function_.
 
 
 The CDF is approximately a straight diagonal line, which means that the distribution is uniform. That outcome might be non-obvious, but it is a consequence of the way the CDF is defined. What this figure shows is that 10% of the sample is below the 10th percentile, 20% is below the 20th percentile, and so on, exactly as we should expect.
@@ -291,16 +290,16 @@ The biggest advantage offered by CDFs and percentile ranks is their comparative 
     A function that maps from a cumulative probability, $p$, to the corresponding value.
 
 + __median__:  
-The 50th percentile, often used as a measure of central tendency.
+    The 50th percentile, often used as a measure of central tendency.
 
 + __interquartile range__:  
-The difference between the 75th and 25th percentiles, used as a measure of spread.
+    The difference between the 75th and 25th percentiles, used as a measure of spread.
 
 + __quantile__:  
-A sequence of values that correspond to equally spaced percentile ranks; for example, the quartiles of a distribution are the 25th, 50th and 75th percentiles.
+    A sequence of values that correspond to equally spaced percentile ranks; for example, the quartiles of a distribution are the 25th, 50th and 75th percentiles.
 
 + __replacement__:  
-A property of a sampling process. “With replacement” means that the same value can be chosen more than once; “without replacement” means that once a value is chosen, it is removed from the population.
+    A property of a sampling process. “With replacement” means that the same value can be chosen more than once; “without replacement” means that once a value is chosen, it is removed from the population.
 
 
 ## Analytic Distributions
@@ -314,13 +313,13 @@ $$
 CDF(x) = 1 − e^{−λx}
 $$
 
-The parameter, $λ$, determines the shape of the distribution. Below we see what this CDF looks like with $λ =$ 0.5, 1, and 2.
+The parameter, _λ_, determines the shape of the distribution. Below we see what this CDF looks like with _λ_ = 0.5, 1, and 2.
 
-![exponential_cdf](images/exponential_cdf.png)
+<img src="images/exponential_cdf.png" width="400" height="400">
 
 In the real world, exponential distributions come up when we look at a series of events and measure the times between events, called _inter-arrival times_. If the events are equally likely to occur at any time, the distribution of inter-arrival times tends to look like an exponential distribution.
 
-One real-world example is the time between births.  Looking at the this inter-arrival time for 44 births from the database, we can look at the CDF and its cousin the _complementary CDF (CCDF)_ to see if the data is from an exponential distribution.  A CCDF is simply $1 - CDF(x)$.  If the sampling distribution is from an exponential distribution, the CCDF will be a straight line _if plotted on a log-y scale._
+One real-world example is the time between births.  Looking at the this inter-arrival time for 44 births from the database, we can look at the CDF and its cousin the _complementary CDF (CCDF)_ to see if the data is from an exponential distribution.  A CCDF is simply _1 - CDF(x)_.  If the sampling distribution is from an exponential distribution, the CCDF will be a straight line _if plotted on a log-y scale._
 
 This works because if you plot a CCDF of a dataset that you think is from an exponential distribution, we expect something along the lines of:
 
@@ -333,21 +332,22 @@ $$
 \log y \approx -\lambda x
 $$
 
-So on a log-y scale the CCDF is a straight line with slope $−λ$
+So on a log-y scale the CCDF is a straight line with slope _−λ_
 
-![ccdf](images/complementary_cdf.png)
+<img src="images/complementary_cdf.png" width="800" height="400">
 
 CDF on the left, CCDF with log-y scale on the right.  It is not exactly straight, which indicates that the exponential distribution is not a perfect model for this data. Most likely the underlying assumption —- that a birth is equally likely at any time of day —- is not exactly true. Nevertheless, it might be reasonable to model this dataset with an exponential distribution. With that simplification, we can summarize the distribution with a single parameter.
 
-The parameter, $λ$, can be interpreted as a rate; that is, the number of events that occur, on average, in a unit of time. In this example, 44 babies are born in 24 hours, so the rate is $λ = 0.0306$ births per minute. The mean of an exponential distribution is $\frac{1}λ$, so the mean time between births is 32.7 minutes.
+The parameter, _λ_, can be interpreted as a rate; that is, the number of events that occur, on average, in a unit of time. In this example, 44 babies are born in 24 hours, so the rate is _λ = 0.0306_ births per minute. The mean of an exponential distribution is _1/λ_, so the mean time between births is 32.7 minutes.
 
 
 ### Normal Distribution
-The normal distribution, also called _Gaussian_, is commonly used because it describes many phenomena, at least approximately. It turns out that there is a good reason for its ubiquity, which we will get to in Section 14.4.
+The normal distribution, also called _Gaussian_, is commonly used because it describes many phenomena, at least approximately. It turns out that there is a good reason for its ubiquity, which we will get to later.
 
-The normal distribution is characterized by two parameters: the mean, $μ$, and standard deviation $σ$. The normal distribution with $μ = 0$ and $σ = 1$ is called the _standard normal distribution_. Its CDF is defined by an integral that does not have a closed form solution, but there are algorithms that evaluate it efficiently. One of them is provided by SciPy: `scipy.stats.norm` is an object that represents a normal distribution; it provides a method, `cdf`, that evaluates the standard normal CDF.
+The normal distribution is characterized by two parameters: the mean, $μ$, and standard deviation $σ$. The normal distribution with _μ = 0_ and _σ = 1_ is called the _standard normal distribution_. Its CDF is defined by an integral that does not have a closed form solution, but there are algorithms that evaluate it efficiently. One of them is provided by SciPy: `scipy.stats.norm` is an object that represents a normal distribution; it provides a method, `cdf`, that evaluates the standard normal CDF.
 
-![gaussian cdf](images/gaussian_cdf.png?s=300)
+
+<img src="images/gaussian_cdf.png" width="400" height="400">
 
 ##### Checking for Normality
 Matching the CDF of a normal distribution with best-fit parameters to a CDF of real data, such as birth weights or inter-arrival times, is one way to determine if a normal distribution would serve as a good model for the data.  Another way is to use a _probability plot_.  
@@ -355,7 +355,7 @@ Matching the CDF of a normal distribution with best-fit parameters to a CDF of r
 #### Probability Plot
 Here's the "easy" way to make a probability plot.
 1. Sort the values in the sample.  
-2. From a standard normal distribution ($μ = 0$ and $σ = 1$), generate a random sample with the same size as the sample, and sort it.  
+2. From a standard normal distribution (_μ = 0_ and _σ = 1_), generate a random sample with the same size as the sample, and sort it.  
 3. Plot the sorted values from the sample versus the random values.
 
 If the distribution of the sample is approximately normal, the result is a straight line with intercept mu and slope sigma. `thinkstats2` provides `NormalProbability`, which takes a sample and returns two NumPy arrays:
@@ -379,11 +379,82 @@ def MakeNormalPlot(weights):
 ```
 
 + `weights` is a pandas Series of birth weights; mean and std are the mean and standard deviation.
+
 + `FitLine` takes a sequence of `xs`, an intercept, and a slope; it returns `xs` and `ys` that represent a line with the given parameters, evaluated at the values in `xs`.
+
 + `NormalProbability` returns `xs` and `ys` that contain values from the standard normal distribution and values from weights. If the distribution of weights is normal, the data should match the model.
 
-<img src="images/normal_prob_plot_birth.png" width="300" height="300">
+<img src="images/normal_prob_plot_birth.png" width="400" height="400">
 
-Figure 5.6 shows the results for all live births, and also for full term births (pregnancy length greater than 36 weeks). Both curves match the model near the mean and deviate in the tails. The heaviest babies are heavier than what the model expects, and the lightest babies are lighter.
+This figure shows the results for all live births, and also for full term births (pregnancy length greater than 36 weeks). Both curves match the model near the mean and deviate in the tails. The heaviest babies are heavier than what the model expects, and the lightest babies are lighter.
 
-When we select only full term births, we remove some of the lightest weights, which reduces the discrepancy in the lower tail of the distribution.  This plot suggests that the normal model describes the distribution well.
+Notice the excellence of fit.  We have seen here that "checking for normality" isn't too difficult and that depending on our goal overall, we may not need our dataset to be perfectly modeled by a distribution.  If the outliers / extreme values are unimportant in the case above, the normal distribution _does_ do a good job of modeling the birth weights from about -1.5 σ to +2 σ.  If that's the range we're interested in, then great.  
+
+When we select only full term births, we remove some of the lightest weights, which reduces the discrepancy in the lower tail of the distribution.  This plot suggests that the normal model describes the distribution well within a few standard deviations from the mean, but not in the tails. Whether it is good enough for practical purposes depends on the purposes.
+
+
+The conclusions drawn from a normal distribution model are valid _only if the dataset is normally distributed_.  This is common sense, but bears repeating.  For the example above, if we made statistical inferences about the larger newborn population outside of those σ we would be unable to have much confidence in them.  Within those ranges of σ, however, we could feel assured that our conclusions were accurate.
+
+
+### Lognormal Distribution
+If the logarithms of a set of values have a normal distribution, the values have a _lognormal distribution_. The CDF of the lognormal distribution is the same as the CDF of the normal distribution, with _log x_ substituted for _x_.
+
+_CDF<sub>lognormal</sub>(x) = CDF<sub>normal</sub>(log x)_
+
+
+The parameters of the lognormal distribution are usually denoted _μ_ and _σ_. But remember that these parameters are not the mean and standard deviation; the mean of a lognormal distribution is _exp(μ + σ<sup>2</sup>/2)_ and the [standard deviation is ugly](http://wikipedia.org/wiki/Log-normal_distribution).
+
+If a sample is approximately lognormal and you plot its CDF on a _log-x_ scale, it will have the characteristic shape of a normal distribution. To test how well the sample fits a lognormal model, you can make a normal probability plot using the log of the values in the sample.
+
+<img src="images/log_linear_cdf_weight.png" width="700" height="350">  
+
+This CDF shows the distribution of adult weights on a linear scale with a normal model (left) and the same distribution on a log scale with a lognormal model (right). The lognormal model is a better fit, but this representation of the data does not make the difference particularly dramatic.  (A close observer will see the grey line of real data skewing a bit at the extremes on the normal model (left)).
+
+
+<img src="images/log_linear_prob_plot_weight.png" width="700" height="350">
+
+This normal probability plot shows adult weights, _w_, and their logarithms, _log<sub>10</sub> w_.  Now we can see clearly that the data deviate at the extremes using the normal distribution as the analytical model while the lognormal distribution provides a good fit.  Human weight would then be described as having a lognormal distribution to it.
+
+
+### Pareto Distribution
+The [Pareto distribution](http://wikipedia.org/wiki/Pareto_distribution) is named after the economist Vilfredo Pareto, who used it to describe the distribution of wealth. Since then, it has been used to describe phenomena in the natural and social sciences including sizes of cities and towns, sand particles and meteorites, forest fires and earthquakes.
+
+The CDF of the Pareto distribution is:
+
+\[
+CDF(x) = 1 − \left(\frac{x}{x_m}\right)^{−α}
+\]
+
++ _x<sub>m</sub>_ and _α_ determine the location and shape of the distribution.  
++ _x<sub>m</sub>_ is the minimum possible value.
+
+<img src="images/pareto_cdf.png" width="400" height="400">
+
+This shows CDFs of Pareto distributions with _x<sub>m</sub> = 0.5_ and different values of _α_.
+
+There is a simple visual test that indicates whether an empirical distribution fits a Pareto distribution: _on a log-log scale, the CCDF looks like a straight line_. Let’s see why that works.
+
+If you plot the CCDF of a sample from a Pareto distribution on a linear scale, you expect to see a function like:
+
+\[
+y ≈ \left(\frac{x}{x_m}\right)^{−α}
+\]
+
+Taking the log of both sides yields:
+
+\[
+\log y ≈ −α(\log x − \log x_m)
+\]
+
+So if you plot _log y_ versus _log x_, it should look like a straight line with slope
+_−α_ and intercept _α * log x<sub>m</sub>_.
+
+As an example, let’s look at the sizes of cities and towns. The U.S. Census Bureau publishes the population of every incorporated city and town in the United States.
+
+<img src="images/ccdf_log_log_populations.png" width="400" height="400">
+
+This shows the CCDF of populations on a _log-log scale_. The largest 1% of cities and towns, below 10<sup>−2</sup>, fall along a straight line. So we could conclude, as some researchers have, that the tail of this distribution fits a Pareto model.  On the other hand, a lognormal distribution also models the data well.
+
+<img src="images/cdf_log-x_norm_prob_plot_log_data_populations.png" width="700" height="350">
+
+This plot shows the CDF of populations and a lognormal model (left), and a normal probability plot (right). Both plots show good agreement between the data and the model.  Neither model is perfect. The Pareto model only applies to the largest 1% of cities, but it is a better fit for that part of the distribution. The lognormal model is a better fit for the other 99%. Which model is appropriate depends on which part of the distribution is relevant.
