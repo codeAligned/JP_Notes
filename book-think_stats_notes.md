@@ -355,5 +355,35 @@ Matching the CDF of a normal distribution with best-fit parameters to a CDF of r
 #### Probability Plot
 Here's the "easy" way to make a probability plot.
 1. Sort the values in the sample.  
-2. From a standard normal distribution (\$μ = 0\$ and \$σ = 1\$), generate a random sample with the same size as the sample, and sort it.  
+2. From a standard normal distribution ($μ = 0$ and $σ = 1$), generate a random sample with the same size as the sample, and sort it.  
 3. Plot the sorted values from the sample versus the random values.
+
+If the distribution of the sample is approximately normal, the result is a straight line with intercept mu and slope sigma. `thinkstats2` provides `NormalProbability`, which takes a sample and returns two NumPy arrays:
+
+`xs, ys = thinkstats2.NormalProbability(sample)`  
++ `ys` contains the sorted values from sample.  
++ `xs` contains the random values from the standard normal distribution.
+
+
+Now let’s try it with real data. Here’s code to generate a normal probability plot for the birth weight data from the previous section. It plots a gray line that represents the model and a blue line that represents the data.
+
+```python
+def MakeNormalPlot(weights):
+    mean = weights.mean()
+    std = weights.std()
+    xs = [-4, 4]
+    fxs, fys = thinkstats2.FitLine(xs, inter=mean, slope=std)
+    thinkplot.Plot(fxs, fys, color='gray', label='model')
+    xs, ys = thinkstats2.NormalProbability(weights)
+    thinkplot.Plot(xs, ys, label='birth weights')
+```
+
++ `weights` is a pandas Series of birth weights; mean and std are the mean and standard deviation.
++ `FitLine` takes a sequence of `xs`, an intercept, and a slope; it returns `xs` and `ys` that represent a line with the given parameters, evaluated at the values in `xs`.
++ `NormalProbability` returns `xs` and `ys` that contain values from the standard normal distribution and values from weights. If the distribution of weights is normal, the data should match the model.
+
+<img src="images/normal_prob_plot_birth.png" width="300" height="300">
+
+Figure 5.6 shows the results for all live births, and also for full term births (pregnancy length greater than 36 weeks). Both curves match the model near the mean and deviate in the tails. The heaviest babies are heavier than what the model expects, and the lightest babies are lighter.
+
+When we select only full term births, we remove some of the lightest weights, which reduces the discrepancy in the lower tail of the distribution.  This plot suggests that the normal model describes the distribution well.
