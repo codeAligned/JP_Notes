@@ -1,11 +1,15 @@
 # Think Stats by Allen Downey
-Think Stats is an 'interactive' book, if you will, by virtue of using Jupyter Notebooks.  It also includes a lot of code modules that are used throughout the book which Downey wrote just for this purpose.  So, using them is advisable when going through the book.  In my opinion, they are written at a high enough level to actually use anytime in dealing with distributions and stats -- just `import thinkstats2 as ts2` in the correct directory (or simply put the module somewhere and add to PYTHONPATH).
+Think Stats is an 'interactive' book, if you will, by virtue of using Jupyter Notebooks.  It also includes a lot of code modules that are used throughout the book which Downey wrote just for this purpose.  So, using them is advisable when going through the book.  In my opinion, they are written at a high enough level to actually use anytime in dealing with distributions and stats -- just `import thinkstats2 as ts2` in the correct directory (or simply put the module somewhere and add to PYTHONPATH).  
+
+These notes will skip over much of the implementation of the ts2 module.  These notes are geared for statistical concepts, regardless of module used.  For more hands-on examples of how to use the excellent stats modules provided with this book, please _see the PDF_.  That said, some will be included as well as general Python implementations when appropriate.
+
+I think, looking to the future, perhaps the single biggest thing to be gained from _Think Stats_ is studying how Downey created his own statistics library for this book.  Learning how he built the dependencies for separate classes and the concise and effective structures of each function will provide a lasting blueprint for how to be a better programmer.
 
 Many passages below are directly from the book and were simply things I enjoyed or wanted to save.
 
 
 ## Empirical Distributions
-### 2. Histograms
+### 1. Histograms
 Counts up items in a list / series / sample and tells you how many times they appear, or their _frequency_.  Helps reveal the distribution of the data.  
 
 In python, one easy way to think about histograms is as a dictionary with occurrences / sample possibilities as the _keys_ and their counts as _values_.
@@ -87,8 +91,7 @@ In this example, the difference in means is 0.029 standard deviations, which is 
 
 <BR><BR>
 
-### 3. Probability Mass Function - PMF
-
+### 2. Probability Mass Function - PMF
 #### PMFs
 Another way to represent a distribution is a probability mass function (PMF), which maps from each value to its _probability_. A probability is a frequency expressed as a fraction of the sample size, $n$. To get from frequencies to probabilities, we divide through by $n$, which is called _normalization_.
 
@@ -138,7 +141,7 @@ for x, freq in hist.Items():
 d[x] = freq / n
 ```
 
-Or we can use the Pmf class provided by thinkstats2. Like Hist, the Pmf constructor can take a list, pandas Series, dictionary, Hist, or another Pmf object. Here’s an example with a simple list:
+Or we can use the `Pmf` class provided by thinkstats2. Like `Hist`, the `Pmf` constructor can take a list, pandas Series, dictionary, `Hist`, or another `Pmf` object. Here’s an example with a simple list:
 
 ```bash
 >>> import thinkstats2
@@ -148,8 +151,8 @@ Or we can use the Pmf class provided by thinkstats2. Like Hist, the Pmf construc
 Pmf({1: 0.2, 2: 0.4, 3: 0.2, 5: 0.2})
 ```
 
-The Pmf is normalized so total probability is 1.
-Pmf and Hist objects are similar in many ways; in fact, they inherit many of their methods from a common parent class. For example, the methods Values and Items work the same way for both. The biggest difference is that _a Hist maps from values to integer counters; a Pmf maps from values to floating-point probabilities._
+The `Pmf` is normalized so total probability is 1.
+`Pmf` and `Hist` objects are similar in many ways; in fact, they inherit many of their methods from a common parent class. For example, the methods Values and Items work the same way for both. The biggest difference is that _a `Hist` maps from values to integer counters; a `Pmf` maps from values to floating-point probabilities._
 
 Note that modifying a probability within a PMF will result in a cumulative probability of the PMF not adding up to 1 (which makes the conclusions drawn from a PMF useless).  In order to fix this we must re-normalize (divide through by the total probability to make it 1 again) the PMF before we can use it again.  Intuitively, if we drop the probability for one item, the probabilities for the remaining items in the PMF will increase and vice versa.
 
@@ -189,7 +192,7 @@ def ObservedPmf(pmf, speed, label=None):
 ```
 
 
-#### Chapter 3 Glossary
+#### Chapter Glossary
 + __Probability mass function (PMF)__:  
     A representation of a distribution as a function that maps from values to probabilities.
 
@@ -202,9 +205,8 @@ def ObservedPmf(pmf, speed, label=None):
 
 <BR><BR>
 
-### 4. Cumulative Distribution Function - CDF
-
-### Percentiles
+### 3. Cumulative Distribution Function - CDF
+#### Percentiles
 If you have taken a standardized test, you probably got your results in the form of a raw score and a _percentile rank_. In this context, the percentile rank is the fraction of people who scored lower than you (or the same). So if you are “in the 90th percentile,” you did as well as or better than 90% of the people who took the exam.
 
 Here’s how you could compute the percentile rank of a value, `your_score`, relative to the values in the sequence scores:
@@ -243,7 +245,7 @@ def Percentile2(scores, percentile_rank):
 The difference between “percentile” and “percentile rank” can be confusing, and people do not always use the terms precisely. To summarize, `PercentileRank` takes a value and computes its percentile rank in a set of values; `Percentile` takes a percentile rank and computes the corresponding value.
 
 
-### CDF
+#### CDF
 The CDF is the function that maps from a _value_ to its _percentile rank_.
 The CDF is a function of _x_, where _x_ is any value that might appear in the distribution. To evaluate _CDF(x)_ for a particular value of _x_, we compute the fraction of values in the distribution less than or equal to _x_.
 
@@ -278,7 +280,7 @@ The CDF is approximately a straight diagonal line, which means that the distribu
 
 The biggest advantage offered by CDFs and percentile ranks is their comparative transferability.  We can convert the value or result in one sample or field to a percentile rank and then find the same rank in a different group (that is applicable) for a cross-group comparison.  For example, we can convert the raw IQ score of an eight-year-old child to the corresponding percentile rank amongst his age group and then find the value that equals the same percentile rank for adults.  This allows us to determine how well a child did compared to an adult, etc.
 
-#### Chapter 4 Glossary
+#### Chapter Glossary
 + __percentile rank__:  
     The percentage of values in a distribution that are less than or equal to a given value.
 
@@ -303,17 +305,17 @@ The biggest advantage offered by CDFs and percentile ranks is their comparative 
 + __replacement__:  
     A property of a sampling process. “With replacement” means that the same value can be chosen more than once; “without replacement” means that once a value is chosen, it is removed from the population.
 
+<BR><BR>
 
-## Analytic Distributions
+## Modeling Distributions
 The distributions we have used so far are called _empirical distributions_ because they are based on empirical observations, which are necessarily finite samples.
 
-The alternative is an _analytic distribution_, which is characterized by a CDF that is a mathematical function. Analytic distributions can be used to model empirical distributions. In this context, a model is a simplification that leaves out unneeded details. This chapter presents common analytic distributions and uses them to model data from a variety of sources.
+The alternative is an _analytic distribution_, which is characterized by a CDF that is a mathematical function. Analytic distributions can be used to model empirical distributions. In this context, a model is a simplification that leaves out unneeded details. This chapter presents common analytic distributions and uses them to model data from a variety of sources.  There are many other distributions not covered here, such as the _binomial_, _beta_, _gamma_, _Poisson_, _Bernoulli_, _chi_, and _Weibull_.
 
-
-### Exponential Distribution
-$$
+### 1. Exponential Distribution
+\[
 CDF(x) = 1 − e^{−λx}
-$$
+\]
 
 The parameter, _λ_, determines the shape of the distribution. Below we see what this CDF looks like with _λ_ = 0.5, 1, and 2.
 
@@ -342,8 +344,9 @@ CDF on the left, CCDF with log-y scale on the right.  It is not exactly straight
 
 The parameter, _λ_, can be interpreted as a rate; that is, the number of events that occur, on average, in a unit of time. In this example, 44 babies are born in 24 hours, so the rate is _λ = 0.0306_ births per minute. The mean of an exponential distribution is _1/λ_, so the mean time between births is 32.7 minutes.
 
+<BR><BR>
 
-### Normal Distribution
+### 2. Normal Distribution
 The normal distribution, also called _Gaussian_, is commonly used because it describes many phenomena, at least approximately. It turns out that there is a good reason for its ubiquity, which we will get to later.
 
 The normal distribution is characterized by two parameters: the mean, $μ$, and standard deviation $σ$. The normal distribution with _μ = 0_ and _σ = 1_ is called the _standard normal distribution_. Its CDF is defined by an integral that does not have a closed form solution, but there are algorithms that evaluate it efficiently. One of them is provided by SciPy: `scipy.stats.norm` is an object that represents a normal distribution; it provides a method, `cdf`, that evaluates the standard normal CDF.
@@ -397,8 +400,9 @@ When we select only full term births, we remove some of the lightest weights, wh
 
 The conclusions drawn from a normal distribution model are valid _only if the dataset is normally distributed_.  This is common sense, but bears repeating.  For the example above, if we made statistical inferences about the larger newborn population outside of those σ we would be unable to have much confidence in them.  Within those ranges of σ, however, we could feel assured that our conclusions were accurate.
 
+<BR><BR>
 
-### Lognormal Distribution
+### 3. Lognormal Distribution
 If the logarithms of a set of values have a normal distribution, the values have a _lognormal distribution_. The CDF of the lognormal distribution is the same as the CDF of the normal distribution, with _log x_ substituted for _x_.
 
 _CDF<sub>lognormal</sub>(x) = CDF<sub>normal</sub>(log x)_
@@ -417,8 +421,9 @@ This CDF shows the distribution of adult weights on a linear scale with a normal
 
 This normal probability plot shows adult weights, _w_, and their logarithms, _log<sub>10</sub> w_.  Now we can see clearly that the data deviate at the extremes using the normal distribution as the analytical model while the lognormal distribution provides a good fit.  Human weight would then be described as having a lognormal distribution to it.
 
+<BR><BR>
 
-### Pareto Distribution
+### 4. Pareto Distribution
 The [Pareto distribution](http://wikipedia.org/wiki/Pareto_distribution) is named after the economist Vilfredo Pareto, who used it to describe the distribution of wealth. Since then, it has been used to describe phenomena in the natural and social sciences including sizes of cities and towns, sand particles and meteorites, forest fires and earthquakes.
 
 The CDF of the Pareto distribution is:
@@ -462,7 +467,7 @@ This shows the CCDF of populations on a _log-log scale_. The largest 1% of citie
 This plot shows the CDF of populations and a lognormal model (left), and a normal probability plot (right). Both plots show good agreement between the data and the model.  Neither model is perfect. The Pareto model only applies to the largest 1% of cities, but it is a better fit for that part of the distribution. The lognormal model is a better fit for the other 99%. Which model is appropriate depends on which part of the distribution is relevant.
 
 
-#### Chapter 5 Glossary
+#### Chapter Glossary
 + __empirical distribution__:  
     The distribution of values in a sample.
 
@@ -483,3 +488,193 @@ This plot shows the CDF of populations and a lognormal model (left), and a norma
 
 + __normal probability plot__:  
     A plot of the values in a sample versus random values from a standard normal distribution.
+
+<BR><BR>
+
+
+### Probability Density Functions - PDF
+The __derivative__ of a CDF is called a _probability density function_, or PDF.
+
+For example, the PDF of an exponential distribution is
+\[
+PDF_{expo}(x) = λe^{−λx}
+\]
+
+The PDF of a normal distribution is
+\[
+\text{PDF}_{normal}(x) = \frac{1}{σ\sqrt{2π}} \text{exp} \left[−\frac{1}{2} \left( \frac{x−μ}{σ} \right)^2 \right]
+\]
+Evaluating a PDF for a particular value of _x_ is __usually not useful__. The result
+    is not a probability; it is a probability _density_.  This can be difficult and unintuitive to interpret, much like _variance_ can be due to having squared units.
+
+In physics, density is mass per unit of volume; in order to get a mass, you have to multiply density by volume or, if the density is not constant, you have to integrate over volume.
+
+Similarly, __probability density__ measures probability per unit of _x_. In order to get a probability mass, you have to integrate over _x_.
+
+The following example creates a NormalPdf from `thinkstats2` with the mean and variance of adult female heights, in cm. Then it computes the density of the distribution at a location one standard deviation from the mean.
+
+```python
+>>> mean, var = 163, 52.8
+>>> std = math.sqrt(var)
+>>> pdf = thinkstats2.NormalPdf(mean, std)
+>>> pdf.Density(mean + std)
+0.0333001
+```
+
+The result is about 0.03, in units of _probability mass per cm_. Again, a probability density doesn’t mean much by itself. Intuitively speaking, how are we to interpret probability mass per cm? That is not a natural unit of measure. But if we plot the Pdf, we can see the shape of the distribution:
+
+<img src="images/pdf_kde_female_height.png" width="400" height="400">
+
+This shows the normal density function and a KDE based on a sam- ple of 500 random heights. The estimate is a good match for the original distribution.  `thinkplot.Pdf` plots the Pdf as a smooth function, as contrasted with `thinkplot.Pmf`, which renders a Pmf as a step function. Here we see the result, as well as a PDF estimated from a sample, which we’ll compute in the next section.
+
+#### Kernel Density Estimate - KDE
+[Kernel density estimation](http://en.wikipedia.org/wiki/Kernel_density_estimation) (KDE) is an algorithm that takes a sample and finds an appropriately smooth PDF that fits the data.
+`scipy` provides an implementation of KDE and `thinkstats2` provides a class called `EstimatedPdf` that uses it:
+
+```python
+class EstimatedPdf(Pdf):
+    def __init__(self, sample):
+        self.kde = scipy.stats.gaussian_kde(sample)
+    def Density(self, xs):
+        return self.kde.evaluate(xs)
+```
+
+`__init__` takes a sample and computes a kernel density estimate. The result is a `gaussian_kde` object that provides an evaluate method.
+
+Density takes a value or sequence, calls `gaussian_kde.evaluate`, and returns the resulting density. The word “Gaussian” appears in the name be- cause it uses a filter based on a Gaussian distribution to smooth the KDE.
+
+##### Why Use a KDE?
+Estimating a density function with KDE is useful for several purposes:
++ __Visualization__:  
+    During the exploration phase of a project, CDFs are usually the best visualization of a distribution. After you look at a CDF, you can decide whether an estimated PDF is an appropriate model of the distribution. If so, it can be a better choice for presenting the distribution to an audience that is unfamiliar with CDFs.
+
++ __Interpolation__:  
+    An estimated PDF is a way to get from a sample to a model of the population. If you have reason to believe that the population distribution is smooth, you can use KDE to interpolate the density for values that don’t appear in the sample.
+
++ __Simulation__:  
+    Simulations are often based on the distribution of a sample. If the sample size is small, it might be appropriate to smooth the sample distribution using KDE, which allows the simulation to explore more possible outcomes, rather than replicating the observed data.
+
+<BR>
+
+### How Distributions Relate to Each Other
+At this point we have seen PMFs, CDFs and PDFs; let’s take a minute to review.  
+We started with PMFs, which represent the probabilities for a discrete set of values. To get from a PMF to a CDF, you add up the probability masses to get cumulative probabilities. To get from a CDF back to a PMF, you compute differences in cumulative probabilities. We’ll see the implementation of these operations in the next few sections.
+
+A PDF is the derivative of a continuous CDF; or, equivalently, a CDF is the integral of a PDF. Remember that a PDF maps from values to probability densities; to get a probability, you have to integrate.
+
+To get from a discrete to a continuous distribution, you can perform various kinds of smoothing. One form of smoothing is to assume that the data come from an analytic continuous distribution (like exponential or normal) and to estimate the parameters of that distribution. Another option is kernel density estimation.
+
+The opposite of smoothing is __discretizing__, or __quantizing__. If you evaluate a PDF at discrete points, you can generate a PMF that is an approximation of the PDF. You can get a better approximation using numerical integration.
+
+To distinguish between continuous and discrete CDFs, it might be better for a discrete CDF to be a “cumulative mass function,” (CMF) but as far as I can tell no one uses that term.
+
+Overall, we can see that __once we have any given distribution we can convert it to another distribution by performing some basic mathematical operations on it__ (in a nice Python function).  This is a fantastic fact that means the bigger issue is knowing what you want to present or model as opposed to struggling for the ability to do so.
+
+<img src="images/distribution_relationships.png">
+
+
+<BR><BR><BR>
+
+### Python Implementation of Distributions in `thinkstats2`
+At this point you should know how to use the basic types provided by `thinkstats2`: `Hist`, `Pmf`, `Cdf`, and `Pdf`. The next few sections provide details about how they are implemented. This material might help you use these classes more effectively, but it is not strictly necessary.
+
+#### `Hist` Implementation
+`Hist` and `Pmf` inherit from a parent class called `_DictWrapper`. The leading underscore indicates that this class is “internal;” that is, it should not be used by code in other modules. The name indicates what it is: a dictionary wrapper. Its primary attribute is `d`, the dictionary that maps from values to their frequencies.
+
+The values can be any hashable type. The frequencies should be integers, but can be any numeric type.
+
+`_DictWrapper` contains methods appropriate for both `Hist` and `Pmf`, including `__init__`, `Values`, `Items` and `Render`. It also provides modifier methods `Set`, `Incr`, `Mult`, and `Remove`. These methods are all implemented with dictionary operations. For example:
+
+```python
+# class _DictWrapper
+    def Incr(self, x, term=1):
+        self.d[x] = self.d.get(x, 0) + term
+    def Mult(self, x, factor):
+        self.d[x] = self.d.get(x, 0) * factor
+    def Remove(self, x):
+        del self.d[x]
+```
+
+`Hist` also provides `Freq`, which looks up the frequency of a given value. Because `Hist` operators and methods are based on dictionaries, these methods are constant time operations; that is, their run time does not increase as the `Hist` gets bigger.
+
+#### `Pmf` Implementation
+`Pmf` and `Hist` are almost the same thing, except that a `Pmf` maps values to floating-point probabilities, rather than integer frequencies. If the sum of the probabilities is 1, the `Pmf` is normalized.
+
+`Pmf` provides `Normalize`, which computes the sum of the probabilities and divides through by a factor:
+
+```python
+# class Pmf
+    def Normalize(self, fraction=1.0):
+    total = self.Total()
+if total == 0.0:
+    raise ValueError('Total probability is zero.')
+factor = float(fraction) / total
+for x in self.d:
+    self.d[x] *= factor
+return total
+```
+
++ `fraction` determines the sum of the probabilities after normalizing; the default value is 1. If the total probability is 0, the `Pmf` cannot be normalized, so `Normalize` raises `ValueError`.
+
+`Hist` and `Pmf` have the same constructor. It can take as an argument a `dict`, `Hist`, `Pmf` or `Cdf`, a pandas `Series`, a list of (value, frequency) pairs, or a sequence of values.
+
+If you instantiate a `Pmf`, the result is normalized. If you instantiate a `Hist`, it is not. To construct an unnormalized `Pmf`, you can create an empty `Pmf` and modify it. The `Pmf` modifiers do not renormalize the `Pmf`.
+
+#### `Cdf` Implementation
+A CDF maps from values to cumulative probabilities, so I could have implemented `Cdf` as a `_DictWrapper`. But the values in a CDF are ordered and the values in a `_DictWrapper` are not. Also, it is often useful to compute the inverse CDF; that is, the map from cumulative probability to value. So the implementation I chose is two sorted lists. That way I can use binary search to do a forward or inverse lookup in logarithmic time.
+
+The `Cdf` constructor can take as a parameter a sequence of values or a pandas Series, a dictionary that maps from values to probabilities, a sequence of (value, probability) pairs, a `Hist`, `Pmf`, or `Cdf`. Or if it is given two parameters, it treats them as a sorted sequence of values and the sequence of corresponding cumulative probabilities.
+
+Given a sequence, pandas Series, or dictionary, the constructor makes a `Hist`. Then it uses the `Hist` to initialize the attributes:
+
+```python
+self.xs, freqs = zip(*sorted(dw.Items()))
+        self.ps = np.cumsum(freqs, dtype=np.float)
+        self.ps /= self.ps[-1]
+```
+
++ `xs` is the sorted list of values
++ `freqs` is the list of corresponding frequencies.
++ `np.cumsum` computes the cumulative sum of the frequencies.
+
+Dividing through by the total frequency yields cumulative probabilities. For _n_ values, the time to construct the `Cdf` is proportional to _n log n_.
+
+Here is the implementation of `Prob`, which takes a value and returns its cumulative probability:
+
+```python
+# class Cdf
+def Prob(self, x):
+    if x < self.xs[0]:
+        return 0.0
+    index = bisect.bisect(self.xs, x)
+    p = self.ps[index - 1]
+    return p        
+```
+
++ The `bisect` module provides an implementation of binary search.
+
+And here is the implementation of `Value`, which takes a cumulative probability and returns the corresponding value:
+
+```python
+# class Cdf
+def Value(self, p):
+    if p < 0 or p > 1:
+        raise ValueError('p must be in range [0, 1]')
+    index = bisect.bisect_left(self.ps, p)
+    return self.xs[index]        
+```
+
+Given a `Cdf`, we can compute the `Pmf` by computing differences between consecutive cumulative probabilities. If you call the `Cdf` constructor and pass a `Pmf`, it computes differences by calling `Cdf.Items`:
+
+```python
+# class Cdf
+def Items(self):
+    a = self.ps
+    b = np.roll(a, 1)
+    b[0] = 0
+    return zip(self.xs, a-b)        
+```
+
++ `np.roll` shifts the elements of `a` to the right, and “rolls” the last one back to the beginning. We replace the first element of `b` with 0 and then compute the difference a-b. The result is a NumPy array of probabilities.
+
+`Cdf` provides `Shift` and `Scale`, which modify the values in the `Cdf`, but the probabilities should be treated as immutable.
