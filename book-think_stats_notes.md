@@ -57,13 +57,15 @@ Mean pregnancy length for first babies is 38.601; for other babies it is 38.523.
 
 If we assume this estimate is accurate, such a difference would have no practical consequences. In fact, without observing a large number of pregnancies, it is unlikely that anyone would notice this difference at all.
 
-Another way to convey the size of the effect is to compare the difference between groups to the variability within groups. Cohen’s $d$ is a statistic intended to do that; it is defined
+Another way to convey the size of the effect is to compare the difference between groups to the variability within groups. Cohen’s _d_ is a statistic intended to do that; it is defined
 
-$$
-d = \frac{x_1 − x_2} s  
-$$
+\[
+d = \frac{x_1 − x_2}{s}  
+\]
 
-where $x_1$ and $x_2$ are the means of the groups and $s$ is the “pooled standard deviation.”
+where _x<sub>1</sub>_ and _x<sub>2</sub>_ are the means of the groups and _s_ is the “pooled standard deviation.”
+
+(non LaTeX: _d = (x<sub>1</sub> - x<sub>2</sub>) / s_)
 
 Here’s the Python code that computes Cohen’s _d_:
 
@@ -474,7 +476,7 @@ This plot shows the CDF of populations and a lognormal model (left), and a norma
     The elapsed time between two events.
 
 + __complementary CDF__:  
-    A function that maps from a value, x, to the fraction of values that exceed x, which is 1 − CDF(x).
+    A function that maps from a value, _x_, to the fraction of values that exceed _x_, which is _1 − CDF(x)_.
 
 + __standard normal distribution__:  
     The normal distribution with mean 0 and standard deviation 1.
