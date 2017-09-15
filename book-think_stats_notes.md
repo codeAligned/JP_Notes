@@ -5,7 +5,7 @@ These notes will skip over much of the implementation of the ts2 module.  These 
 
 I think, looking to the future, perhaps the single biggest thing to be gained from _Think Stats_ is studying how Downey created his own statistics library for this book.  Learning how he built the dependencies for separate classes and the concise and effective structures of each function will provide a lasting blueprint for how to be a better programmer.
 
-Many passages below are directly from the book and were simply things I enjoyed or wanted to save.
+Initially I planned to make concise personal notes on the book, but as I began reading it I realized that Downey had done such a fantastic job of providing only essential information with great examples that I didn't have much room for improvement.  So, by and large what follows below are whole cloth excerpts with a bit thrown in here and there by me.  My longer personal notes on some of these topics are in the `jp_prob_stats_notes.md` file.
 
 
 ## Empirical Distributions
@@ -467,6 +467,28 @@ This shows the CCDF of populations on a _log-log scale_. The largest 1% of citie
 This plot shows the CDF of populations and a lognormal model (left), and a normal probability plot (right). Both plots show good agreement between the data and the model.  Neither model is perfect. The Pareto model only applies to the largest 1% of cities, but it is a better fit for that part of the distribution. The lognormal model is a better fit for the other 99%. Which model is appropriate depends on which part of the distribution is relevant.
 
 
+### Generating Random Numbers
+Analytic CDFs can be used to generate random numbers with a given distribution function, _p = CDF(x)_. If there is an efficient way to compute the inverse CDF, we can generate random values with the appropriate distribution by choosing _p_ from a uniform distribution between 0 and 1, then choosing _x = ICDF(p)_.
+
+For example, the CDF of the exponential distribution is  
+_p = 1 − e<sup>−λx</sup>_  
+
+Solving for _x_ yields:
+
+_x = −log(1 − p)/λ_
+
+So in Python we can write  
+```python
+def expovariate(lam):
+    p = random.random()
+    x = -math.log(1-p) / lam
+    return x
+```
+`expovariate` takes lam and returns a random value chosen from the exponential distribution with parameter `lam`.
+
+Two notes about this implementation: I called the parameter `lam` because `lambda` is a Python keyword. Also, since _log 0_ is undefined, we have to be a little careful. The implementation of `random.random` can return 0 but not 1, so _1 − p_ can be 1 but not 0, so _log(1-p)_ is always defined.
+
+
 #### Chapter Glossary
 + __empirical distribution__:  
     The distribution of values in a sample.
@@ -575,7 +597,7 @@ Overall, we can see that __once we have any given distribution we can convert it
 
 <BR><BR><BR>
 
-### Python Implementation of Distributions in `thinkstats2`
+## Python Implementation of Distributions in `thinkstats2`
 At this point you should know how to use the basic types provided by `thinkstats2`: `Hist`, `Pmf`, `Cdf`, and `Pdf`. The next few sections provide details about how they are implemented. This material might help you use these classes more effectively, but it is not strictly necessary.
 
 #### `Hist` Implementation
@@ -678,3 +700,98 @@ def Items(self):
 + `np.roll` shifts the elements of `a` to the right, and “rolls” the last one back to the beginning. We replace the first element of `b` with 0 and then compute the difference a-b. The result is a NumPy array of probabilities.
 
 `Cdf` provides `Shift` and `Scale`, which modify the values in the `Cdf`, but the probabilities should be treated as immutable.
+
+
+#### Moments
+Any time you take a sample and reduce it to a single number, that number is a statistic. The statistics we have seen so far include mean, variance, median, and interquartile range.
+
+A raw moment is a kind of statistic. If you have a sample of values, _x<sub>i</sub>_, the
+ _kth_ raw moment is:
+
+\[
+m^{'}_{k} = \frac{1}{n} \sum_{i}x^{k}_{i}
+\]
+
+Or if you prefer Python notation:
+
+```python
+def RawMoment(xs, k):
+    return sum(x**k for x in xs) / len(xs)
+```
+
+When _k = 1_ the result is the sample mean, $\overline{x}$. The other raw moments don’t mean much by themselves, but they are used in some computations.
+
+The central moments are more useful. The _kth_ central moment is:
+
+\[
+m_{k} = \frac{1}{n} \sum_{i} \left( x_{i} − \overline{x} \right) ^{k}
+\]
+
+Or in Python:  
+```python
+def CentralMoment(xs, k):
+    mean = RawMoment(xs, 1)
+    return sum((x - mean)**k for x in xs) / len(xs)
+```
+
+When _k = 2_ the result is the second central moment, which you might recognize as variance. The definition of variance gives a hint about why these statistics are called "moments." If we attach a weight along a ruler at each location, _x<sub>i</sub>_, and then spin the ruler around the mean, the moment of inertia of the spinning weights is the variance of the values. Read more about [moment of inertia](http://en.wikipedia.org/wiki/Moment_of_inertia) if unfamiliar.
+
+When you report moment-based statistics, it is important to think about the units. For example, if the values _x<sub>i</sub>_ are in cm, the first raw moment is also in cm. But the second moment is in cm<sup>2</sup>, the third moment is in cm<sup>3</sup>, and so on.
+
+Because of these units, moments are hard to interpret by themselves. That’s why for the second moment, variance, it is common to report standard deviation, which is the square root of variance, so it is in the same units as _x<sub>i</sub>_.
+
+
+### Skewness
+Skewness is a property that describes the shape of a distribution. If the distribution is symmetric around its central tendency, it is unskewed. If the values extend farther to the right, it is “right skewed” and if the values extend left, it is “left skewed.”
+
+This use of “skewed” does not have the usual connotation of “biased.” Skewness only describes the shape of the distribution; it says nothing about whether the sampling process might have been biased.
+
+Several statistics are commonly used to quantify the skewness of a distribution. Given a sequence of values, _x<sub>i</sub>_, the sample skewness, _g<sub>1</sub>_, can be computed like this:
+
+```python
+def StandardizedMoment(xs, k):
+    var = CentralMoment(xs, 2)
+    std = math.sqrt(var)
+    return CentralMoment(xs, k) / std**k
+
+def Skewness(xs):
+    return StandardizedMoment(xs, 3)    
+```
+
+_g<sub>1</sub>_ is the third standardized moment, which means that it has been nor-malized so it has no units.
+
+Negative skewness indicates that a distribution skews left; positive skewness indicates that a distribution skews right. The magnitude of _g<sub>1</sub>_ indicates the strength of the skewness, but by itself it is not easy to interpret.
+
+In practice, computing sample skewness is usually _not a good idea_. If there are any outliers, they have a disproportionate effect on _g<sub>1</sub>_.
+
+A better way to evaluate the asymmetry of a distribution is to look at the relationship between the mean and median. Extreme values have more effect on the mean than the median, so in a distribution that skews left, the mean is less than the median. In a distribution that skews right, the mean is greater.
+
+_Pearson’s median skewness coefficient_ is a measure of skewness based on the difference between the sample mean and median:
+\[
+g_{p} = 3( \overline{x} − m) / S
+\]
+
+Where $\overline{x}$ is the sample mean, _m_ is the median, and _S_ is the standard deviation. Or in Python:
+
+```python
+def Median(xs):
+    cdf = thinkstats2.Cdf(xs)
+    return cdf.Value(0.5)
+
+def PearsonMedianSkewness(xs):
+    median = Median(xs)
+    mean = RawMoment(xs, 1)
+    var = CentralMoment(xs, 2)
+    std = math.sqrt(var)
+    gp = 3 * (mean - median) / std
+    return gp    
+```
+
+This statistic is _robust_, which means that it is less vulnerable to the effect of outliers.
+
+The sign of the skewness coefficient indicates whether the distribution skews left or right, but other than that, they are hard to interpret. _Sample skewness_ is less robust; that is, it is more susceptible to outliers. As a result it is less reliable when applied to skewed distributions, exactly when it would be most relevant. _Pearson’s median skewness_ is based on a computed mean and variance, so it is also susceptible to outliers, but since it does not depend on a third moment, it is somewhat more robust.
+
+
+<BR><BR>
+
+Ch 7 - all
