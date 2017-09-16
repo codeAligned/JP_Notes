@@ -85,3 +85,29 @@ pd.read_sql(query, conn)
 
 ##### Always Close the Connection
 `result.close()`
+
+
+
+
+
+
+
+```python
+## IPython Testing Block
+s = select([column('Team'), column('Owner')])
+s.append_column(column('Final_Wins'))
+# print(s)
+s = s.where(and_(column('Owner').in_(['Brad', 'Ben', 'JP', 'Zack']), column('Final_Wins') >= 8))
+
+s = s.where(column('Year').in_(['2014', '2015']))
+# s = s.where(column('Owner').in_(['Zack']))
+# s.append_whereclause(column('Owner').in_(['Zack']))
+# whereclause = text("where(column('Owner').in_(['Brad', 'Ben']))")
+# s.append_whereclause(whereclause)
+# print(s)
+query = s.select_from(vtable)
+print(query)
+result = conn.execute(query)
+for row in result:
+    print(row)
+```
