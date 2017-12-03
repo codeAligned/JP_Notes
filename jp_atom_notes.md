@@ -69,11 +69,11 @@ Here are a few third-party packages (there are thousands out there) that are use
 
 + `Highlight Selected` - When you double click or highlight a word, this package automatically highlights all other appearances of that word in your file on your screen.  This is really handy when trying to find where the other instances of an argument to a function is modified, for example.
 
-+ `Minimap` - Gives a condensed window overlay view of your entire script.  You can click anywhere on the minimap to jump directly to that spot.  If you have a smaller screen you might not care for the extra screen real estate being used by this.  Up to you.  You can also git `minimap highlight selected` to highlight all the occurrences of a word in your minimap.
++ `Minimap` - Gives a condensed window overlay view of your entire script.  You can click anywhere on the minimap to jump directly to that spot.  If you have a smaller screen you might not care for the extra screen real estate being used by this.  Up to you.  You can also `minimap highlight selected` to highlight all the occurrences of a word in your minimap.  I don't use the Minimap generally, but it can be nice for very large files, especially if you're plugging your laptop into a larger monitor.
 
 + `File Icons` - Adds a softly-colored icon to every file based on its file type.  Convenient way to identify what types of files you are working with.  Highly recommended.
 
-+ `Markdown preview plus` - Lets you preview a Markdown file in either Atom Markdown or the ubiquitous Github Flavored Markdown.  Simply open a Markdown file, like your assignments or lectures, and hit __Ctrl__ + __Shift__ + __M__ to open a new tab or pane with the rendered file (i.e. it will look like the nice README files on Github).  I personally dislike the use of split panes on a laptop screen, so I recommend turning off split pane previews in the settings of this package (this means a new full tab will be used).
++ `Markdown preview plus` - Lets you preview a Markdown file in either Atom Markdown or the ubiquitous Github Flavored Markdown.  Simply open a Markdown file, like your assignments or lectures, and hit __Ctrl__ + __Shift__ + __M__ to open a new tab or pane with the rendered file (i.e. it will look like the nice README files on Github).  I personally dislike the use of split panes on a laptop screen due to limited screen real estate, so I recommend turning off split pane previews in the settings of this package (this means a new full tab will be used). To change these settings go to Atom -> Preferences -> Packages -> <search for Markdown preview plus> -> Settings.  Uncheck "Open Preview in Split Panes" and do check "Use Github Style."
 
 + `Markdown writer` - Helps with the rote tasks of writing Markdown.  Hitting __Return__ when in the middle of a bullet point list will create another bullet point, for example.  Convenient.
 
@@ -85,8 +85,12 @@ Here are a few third-party packages (there are thousands out there) that are use
 
 ### Open Atom from Terminal
 Click 'Atom' in the menubar up top and choose __Install Shell Commands__.
-Now you can use commands in the terminal to open files or folders with Atom
+Now you can use commands in the terminal to open files or folders with Atom.
 
 + `atom .` -- opens current terminal directory in Atom
 + `atom <filename>` -- opens file in Atom (good for hidden files)
 + `atom` -- opens a new Atom window
+
+
+
+...ADD SOFT WRAPS

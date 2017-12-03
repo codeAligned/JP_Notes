@@ -619,8 +619,13 @@ Here's an example using the FFT DF:
 `df.columns.get_level_values(0)`
 
 
+### Append v. Concat
+It's pretty common to have many similar sources (say a bunch of CSVs) that need to be combined into a single DataFrame. There are two routes to the same end:
 
+1. Initialize one DataFrame and append to that
+2. Make many smaller DataFrames and concatenate at the end
 
+For pandas, the second option is faster. DataFrame appends are expensive relative to a list append. Depending on the values, pandas might have to recast the data to a different type. And indexes are immutable, so each time you append pandas has to create an entirely new one.
 
 
 

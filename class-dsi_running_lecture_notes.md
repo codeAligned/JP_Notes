@@ -289,11 +289,14 @@ Bias v. Variance can be thought of much like Accuracy v. Reliability in science.
 + Bias (Accuracy):
   + High Bias = **Underfitting** and **Low complexity**
   + Bias can be thought of as how accurate we predict/model the true signal, the true data points.  With increased accuracy we have less bias.  
+
 + Variance (Reliability)
   + High Variance = **Overfitting** and **High complexity**
   + Variance is how much our model's results will change with different input data.  If we change our input data/signal and our output is consistent, even if it is wrong, it has low variance -- it is reliable (even if reliably wrong).  
 
-The big conundrum is balancing Bias v. Variance. As we try to increase variance by adding model complexity we can *overfit* the model to *that particular data*, then our model will be unreliable with *different data* (from the same population), meaning it has a high bias.  We ideally would love very low bias and variance, of course, but outside of instructional simple systems, this is not likely achievable.  As with any system of tradeoffs, there is a sweet spot (i.e. a local minimum, see below) where we have as low of a bias and variance as is reasonable.
+We want LOW bias and variance!  But we can't have arbitrarily low measures in both, because they're related.
+
+The big conundrum is balancing Bias v. Variance. If we increase variance by adding model complexity we can *overfit* the model to *that particular data*, then our model will be unreliable with *different data* (from the same population).  We ideally would love very low bias and variance, of course, but outside of instructional simple systems, this is not likely achievable.  As with any system of tradeoffs, there is a sweet spot (i.e. a local minimum, see below) where we have as low of a bias and variance as is reasonable.
 
 <div align="center">
     <img height="400" src="/Users/jpw/Dropbox/Work/Galvanize/DSI_Camp/Week3/regularized-regression/images/bias_variance_graph.png">

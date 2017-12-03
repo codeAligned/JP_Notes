@@ -20,12 +20,14 @@ conn = engine.connect()
 # Create a Table object, giving the matching name for the actual table in the DB and a MetaData object
 # I am unsure if the table name 'vtown' defaults to the .db name?  Unsure if table inside vtown.db is actually named 'vtown'
 vtable = Table('vtown', MetaData())
+```
 
-# Create a (very basic) SELECT statement
+Create a (very basic) SELECT statement
+```python
 s = select([column('Team'), column('Owner')])
 ```
 
-This works by simply naming a column that we will pass to the query statement below which _names the table_ we are selecting from.  If the columns in this select statement are not in that table, I believe we will get an error.  This is a more flexible way using the Select statement with column objects.  A more basic way is to simply name the table you're selecting from in the select statement itself, such as:
+This works by simply naming a column that we will pass to the query statement below which _names the table_ we are selecting from.  If the columns in this select statement are not in that table, I believe we will get an error.  This is a more flexible way using the Select statement with the table name in it.  A more basic way is to simply name the table you're selecting from in the select statement itself, such as:
 
 ```python
 s = select(vtown.c.Team, vtown.c.Owner)
@@ -92,8 +94,15 @@ pd.read_sql(query, conn)
 
 
 
+##### IPython Testing Block
 ```python
-## IPython Testing Block
+from sqlalchemy import select, and_, or_, Table, MetaData, create_engine
+from sqlalchemy.sql import column, text
+from sqlalchemy.sql.expression import case
+engine = create_engine('sqlite://///Users/jpw/Desktop/vtown.db')
+conn = engine.connect()
+vtable = Table('vtown', MetaData())
+
 s = select([column('Team'), column('Owner')])
 s.append_column(column('Final_Wins'))
 # print(s)
@@ -111,3 +120,16 @@ result = conn.execute(query)
 for row in result:
     print(row)
 ```
+
+
+```sql
+SELECT factset_entity_id as companyId, period_end as period_end_date,
+       calendar_year, calendar_quarter, location_flag,
+       rank() over (partition by factset_entity_id order by period_end desc) as rel_rank
+FROM pviews.canonical_quarters_loc_v vfp
+WHERE period_end <= :end_date
+AND factset_entity_id IN :company_ids
+AND fiscal_quarter % :period_factor = 0
+```
+
+s = select([column('Team'), column('Owner'),func.rank().over(func.partition_by('Year'))])

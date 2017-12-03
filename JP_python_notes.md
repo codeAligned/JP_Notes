@@ -949,3 +949,35 @@ For something imported you can use
 import inspect
 print(inspect.getsource(function_name))
 ```
+
+
+
+
+
+
+
+
+#### Copy module
+The copy module contains a function called copy that can duplicate any object!
+`copy()` is a shallow copy (only the object itself, not the objects it refers to) and `deepcopy()` is, yes, a deep copy that also copies all the objects the copied object refers to.
+
+```python
+>>> import copy
+>>> p2 = copy.copy(p1)
+>>> p1 is p2
+False
+
+>>> p1.some_data is p2.some_data
+True
+
+p3 = copy.deepcopy(p1)
+>>> p1 is p3
+True
+```
+
+
+
+
+#### Decorators
+http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
+> Python supports a feature called function closures which means that inner functions defined in non-global scope remember what their enclosing namespaces looked like at definition time.
