@@ -46,3 +46,35 @@ So, our goal is to (ideally) remove all related features for any type of model. 
 
 4. __Variable Decomposition with Principal Component Analysis (PCA):__  
     Also known as _dimension reduction_, this technique seeks to decompose a set of variables to their core components using some higher-order math.  While the math going on under the hood is not something I have studied, so I am not qualified to describe it with any authority, the basic gist of PCA is clear: to take a dataset of higher dimensionality (i.e. many variables, of which numerous likely share some colinearity) and identify the underlying core components to create _new_ variables that are uncorrelated by definition (this is a form of dimensionality reduction).  As a result, the output of PCA means there should be _no_ correlation between variables in the dataset, making it ready for any model.  (Note: there are issues with using _sparse_ data in PCA. If the dataset in question is sparse, PCA may or may not be a viable technique to use).  SK-Learn has a [PCA package](http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html) available, including references to some of the underlying theory behind the technique.
+
+
+
+### Decision Trees (CART)
+Decision trees are essentially an application of the semi-well known game, "20 Questions." The board game "Guess Who" is perhaps a better known example.  If we wanted, we could draw out a decision tree of an actual round of Guess Who as a demonstration.  In Guess Who we are trying to find out "who" the opposing player is by asking questions about their character's appearance which iteratively narrow down the pool of possibilities until all but one are eliminated.  Mathematically, the smartest approach is to ask questions which eliminate half the possibilities. If there are 30 possible people for your opponent to be, then the progression would go 30 --> 15 --> 7.5 (8 - can't have half a person) --> 4 --> 2 --> 1.  Thus it would take a maximum of five turns to guess the opponent.  
+
+This is neither the worst case nor best case scenario, technically.  If we had a question that allowed us to eliminate, say, 90% (27 of 30) of the possible people, we could ask it and if we were correct ("Does your person have a big red nose?" and only three people do), then we've eliminated 27 and are left with three.  Our _worst_ case from this point is that it takes three more turns.  Add those to the first turn and we've used only four total now to win.  Hence, five turns is not the best case.  In fact, the best case should be obvious -- one turn.  We start the game and I take a stab in the dark and guess correctly.  One turn, win.  But, how reliable is that?  How many times would we expect that to work? (1/30 flat rate)
+
+Going back to the big red nose question, we see that if we guess correctly with that question we drastically reduce the pool of possibilities from 30 down to three.  But if we miss with it, and they do not have a big red nose, then we can only eliminate the three that do.  We've gone from 30 possible people now to 27.  Not good.
+
+Thus, without specific knowledge relating to the scenario in question (say, my daughter favors girl characters with dark hair...), then the optimal strategy for a generic game of Guess Who is to eliminate half the pool with each question.  
+
+However, the game is designed with this in mind and there are very few questions which can eliminate half of the pool.  There are more than two colors of hair, eyes, shapes of noses, and types of hats, etc.  So each question regarding these items only eliminates by a factor of how many classes are in the given category.  An easy one to divide half the pool, however, is gender.  Boy or girl.  
+
+So, we have one question that can divide half the pool and numerous other ones that can only divide it by a factor less than that.  Which one should we ask first?  Well, it should be clear that asking the gender question at the beginning will have the most impact because eliminating half the pool when there are 30 people removes 15 of them.  Saving it and asking it when there are only six people removes just three...
+
+Decision trees work this way.  They ask questions of, or _split_, the data and try to figure out which questions have the biggest impact and remove the most possibilities from the pool.  For example, if we have healthcare data in which some people were stroke victims, and one of the variables in the dataset is whether or not the person smoked.  The decision tree might find that splitting the data on the "smoker" variable -- in other words, asking "did this person smoke or not?," just like in the Guess Who: Hospital version -- was much more important in predicting whether someone had a stroke than, say, splitting on whether or not they drank orange juice.  
+
+The tree samples which features provide the best split by using a loss/error metric ("Gini coefficient" or "Entropy / information gained" for classifiers and whatever your error metric is for regressors) at each split.  It starts the tree with the _most important_ split and carries on from there, with each successive split being on a feature that is less important.
+
+If we fully fill the tree by letting it grow until every node becomes a leaf (i.e. a terminal node), we will have a tree that fully details the data given to it.  But, this is problematic b/c it means that the splits further down the tree are based on potentially fairly unimportant features.  This "fitting" then becomes "overfitting" and our tree is now _too specific_ in its construction.  It works for this data alone, but not other similar data that isn't exactly the same.  In a word, this tree is inflexible and lacking in general predictiveness.  In data science terms, we'd say it has _high variance_.
+
+This is the problem of using only a single tree and is resolved by using ensemble methods, like Random Forests and Boosted Trees.
+
+
+
+### Random Forests
+Popular now, but still fairly young in age, Random Forests are a great approach to using decision trees in a more robust manner.  Random Forests address the issues we described above with single decision trees in a few, distinct ways.
+
+1. Use many trees instead of a lone tree.
+    1. We will see how this is employed in the RF model and how it impacts prediction positively.
+2. Introduce 

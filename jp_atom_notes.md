@@ -26,40 +26,51 @@ Other major languages such as Ruby, C, and Javascript are all supported as well.
 Atom has some nifty shortcuts which save a lot of time.
 
 ##### Multiple Cursors
-Foremost is the ability to use _multiple cursors_ at a time!  To do this, simply hold down __Command__ and click where you want additional cursors to be.  This allows multi-line, multi-point editing.  Depending on the file, this can be an unrivaled convenience.
+Foremost is the ability to use _multiple cursors_ at a time!  To do this, simply hold down Command (`Cmd`)  and click where you want additional cursors to be.  This allows multi-line, multi-point editing.  Depending on the file, this can be an unrivaled convenience.
 
-Similarly if you double click a word and have the `highlight selected` package installed, you can hold down __Cmd__ + __D__ to cycle to the next appearance of the highlighted word, created a new cursor at it as well.
+Similarly if you double click a word and have the `highlight selected` package installed, you can hold down `Cmd + d` to cycle to the next appearance of the highlighted word, creating a new cursor at it as well.
 
 ##### Jump to Next Occurrence of Word
-__Cmd__ + __g__
+`Cmd + g`
 
 ##### Go to Specific Line
-__Ctrl__ + __g__
+Hit `Ctrl + g` and type the line number you want to jump to.  Makes debugging easier too, as you can see the error message and jump directly to the line in question.
 
 ##### Multi-line Shifting
-When you highlight a block of text (multiple lines), you can shift it all together.  This is especially common when using __Tab__.  Frequently you'll want to indent or un-indent an entire block of code.  To un-indent, hold __Shift__ when you hit __Tab__.
+When you highlight a block of text (multiple lines), you can shift it all together.  This is especially common when using `Tab`.  Frequently you'll want to indent or un-indent an entire block of code.  To un-indent, hold `Shift` when you hit `Tab`.
 
-You can also shift any line or group of lines at once in unison.  To do this just use __Ctrl__ + __Cmd__ and hit either the __Up Arrow__ or __Down Arrow__ key.  
+You can also shift any line or group of lines at once in unison.  To do this just use `Ctrl + Cmd` and hit either the `Up Arrow` or `Down Arrow` key.  
 
 ##### Instant New Line
-There's also a nifty hotkey to create a new line.  Frequently we want have an idea and want to make a new line to start typing, but we are in the middle of a line already, so we would normally go to the end of this line and then hit __Return__ to make a new line.  But since we do this so much, Atom has a nice shortcut which is to simply hold down __Cmd__ when you hit __Return__ and a new line will be made -- with your cursor at the beginning -- regardless of where you are currently.
+There's also a nifty hotkey to create a new line.  Frequently we want have an idea and want to make a new line to start typing, but we are in the middle of a line already, so we would normally go to the end of this line and then hit `Return` to make a new line.  But since we do this so much, Atom has a nice shortcut which is to simply hold down `Cmd` when you hit `Return` and a new line will be made -- with your cursor at the beginning -- regardless of where you are currently.
 
 ##### Multi-line Comments
-When coding in Python using a hashtag / pound sign (`#`) turns a line of code into a _comment_.  A comment is just what it sounds like, a note or instruction for a human reader and is ignored entirely by the Python script itself.  In Atom, we can comment multiple lines at once by highlighting them and hitting __Cmd__ + __/__.  This will also un-comment any number of lines if they are already commented out.  Very handy!
+When coding in Python using a hashtag / pound sign (`#`) turns a line of code into a _comment_.  A comment is just what it sounds like, a note or instruction for a human reader and is ignored entirely by the Python script itself.  In Atom, we can comment multiple lines at once by highlighting them and hitting `Cmd + /`.  This will also un-comment any number of lines if they are already commented out.  Very handy!
 
 ##### Code Folding
 Atom also supports code folding, as do most modern editors.  Most people are familiar with these by using the little triangles on the left border of the editor that collapse, or fold, a block of code (such as a function) into a single line.  The actual code itself is still valid; this is simply to de-clutter your screen in an effort to let you temporarily visually "hide" parts of code you are done with or not currently working on.  As your files grow larger clicking on every function, class, or extended container listing becomes unruly.  
 
-So we can use some nifty keyboard shortcuts to quicken the process and get the full benefits of code folding.  For a single fold on the line where your cursor is, use __Cmd__ + __Option (Alt)__ + __[__ (left bracket, `[`) to fold the line and the same command with a right bracket (`]`) to unfold the line.  To fold or unfold _all_ collapsable blocks of code, simply add __Shift__ to the above command.  Last, if you want to fold/unfold at a specific indentation level, hold __Cmd__ and hit __k__, then hit __0-9__ (while still holding __Cmd__) to select the indentation level at which you want to collapse or expand.  
+So we can use some nifty keyboard shortcuts to quicken the process and get the full benefits of code folding.  For a single fold on the line where your cursor is, use `Cmd + Option (Alt)` + `[` (left bracket, `[`) to fold the line and the same command with a right bracket (`]`) to unfold the line.  To fold or unfold _all_ collapsable blocks of code, simply add `Shift` to the above command.  Last, if you want to fold/unfold at a specific indentation level, hold `Cmd` and hit `k`, then hit `0-9` (while still holding `Cmd`) to select the indentation level at which you want to collapse or expand.  
 
 ##### In-file and In-project Searching
-Finally, we should mention that as you work with larger scripts or even libraries and code bases that have many interconnected pieces, you will want to _search_ for a keyword or function, etc.  Atom has a robust search feature which we activate with __Cmd__ + __F__.  We can use it to not only search for words but to also replace them (think if you have 17 occurrences of a variable named "distance_added" but it really is "distance_removed" and you need to rename it; using search we can highlight all the occurrences and _replace all_ with the new name in one go).  We can limit searches to an area we've highlighted (good for changing text in a single function or class), match by case sensitivity, and even use _RegEx_ (a string matching module).  
+Finally, we should mention that as you work with larger scripts or even libraries and code bases that have many interconnected pieces, you will want to _search_ for a keyword or function, etc.  Atom has a robust search feature which we activate with `Cmd + F`.  We can use it to not only search for words but to also replace them (think if you have 17 occurrences of a variable named "distance_added" but it really is "distance_removed" and you need to rename it; using search we can highlight all the occurrences and _replace all_ with the new name in one go).  We can limit searches to an area we've highlighted (good for changing text in a single function or class), match by case sensitivity, and even use _RegEx_ (a string matching module).  
 
-A lesser-known feature that is very powerful is the ability to search in an entire directory.  To do this, open your Project View Tree (__Cmd__ + __|__, that's a 'pipe' character, on the backslash key above __Return__ usually), right-click on the directory you want to search and choose "Search Directory".  A new tab will open that has an indexed result of all the matches of what you searched for throughout that directory / project.  Clicking on any of the links in this results window will take you to the file in question.  Very nice.
+A lesser-known feature that is very powerful is the ability to search in an entire directory.  To do this, open your Project View Tree (`Cmd + |`, that's a _pipe_ character, on the backslash key above `Return` usually), right-click on the directory you want to search and choose "Search Directory".  A new tab will open that has an indexed result of all the matches of what you searched for throughout that directory / project.  Clicking on any of the links in this results window will take you to the file in question.  Very nice.
 
+##### Tabs
+Cycle through open tabs:  
+`Cmd + Shift + right/left bracket`  
 
-To see what all hotkeys are type __Cmd__ + __Shift__ + __P__.
+Move Tabs:  
+`Ctrl + Shift + left/right arrow`  
+I like to keep my project tabs organized in a certain manner much of the time.  I like to use the keyboard to actually move the tabs.  This is not a particular timesaver, but is rather just a nice touch that I alone will probably enjoy.
 
+##### Highlight All Text Inside Brackets
+`Ctrl + Cmd + m`  
+This will highlight all content inside a set of brackets, regardless of spacing.
+
+##### Hotkey Menu
+To see what all hotkeys are type `Cmd + Shift + P`.
 
 
 <BR>
@@ -75,7 +86,7 @@ Here are a few third-party packages (there are thousands out there) that are use
 
 + `Markdown preview plus` - Lets you preview a Markdown file in either Atom Markdown or the ubiquitous Github Flavored Markdown.  Simply open a Markdown file, like your assignments or lectures, and hit __Ctrl__ + __Shift__ + __M__ to open a new tab or pane with the rendered file (i.e. it will look like the nice README files on Github).  I personally dislike the use of split panes on a laptop screen due to limited screen real estate, so I recommend turning off split pane previews in the settings of this package (this means a new full tab will be used). To change these settings go to Atom -> Preferences -> Packages -> <search for Markdown preview plus> -> Settings.  Uncheck "Open Preview in Split Panes" and do check "Use Github Style."
 
-+ `Markdown writer` - Helps with the rote tasks of writing Markdown.  Hitting __Return__ when in the middle of a bullet point list will create another bullet point, for example.  Convenient.
++ `Markdown writer` - Helps with the rote tasks of writing Markdown.  Hitting `Return` when in the middle of a bullet point list will create another bullet point, for example.  Convenient.
 
 + `Autoclose HTML` - For those writing HTML this is a nice way to ensure you don't have dangling tags.  Every time you start a new HTML tag with the opened angle bracket, this package creates the closing angled bracket for that tag.  Convenient.
 
@@ -83,7 +94,8 @@ Here are a few third-party packages (there are thousands out there) that are use
 
 <BR>
 
-### Open Atom from Terminal
+### Atom Settings
+##### Open Atom from the Terminal  
 Click 'Atom' in the menubar up top and choose __Install Shell Commands__.
 Now you can use commands in the terminal to open files or folders with Atom.
 
@@ -93,4 +105,7 @@ Now you can use commands in the terminal to open files or folders with Atom.
 
 
 
-...ADD SOFT WRAPS
+##### Soft Wrap
+Inside Settings there is an Editor Setting called __Soft Wrap__.  This means that the text displayed in your editor will wrap to a new line based on how large the current Atom window is.  If you make it larger, then more text will fit on one line.  A line that is wrapped is _not_ a new line as far as the editor is concerned, it is just a display convenience.  For those coding on laptops, which is most of us, the ability to visually wrap text based on how large I choose the window to be is a screen real estate-maximizing luxury.  It's also excellent for notes.
+
+Some people may want to enforce a Hard Wrap at a set line length, which is fine.  But for working on a laptop, I find the Soft Wrap (_not_ Soft Wrap at Line Length, which I disable) option to be most flexible and effective.  Do note that having long, multi-line statements or comments in code can make it very messy and frustrating to others reading your work on a different monitor setup (e.g. requiring them to scroll comically far to the right).  To address this, I always implement a manual New Line return near the edge of the Atom window.  But having Soft Wrap allows me the chance to have a keyword or statement extend slightly beyond this when it makes sense instead of forcing it onto a new line prematurely.  Ultimately this is a user preference, but one I am advocating for.

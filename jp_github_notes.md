@@ -117,6 +117,9 @@ If you want to ignore a specific folder, simply enter the directory into the `.g
 Please note that if you delete any file or folder on the Github web interface, it will be deleted from your local once you do a `git pull`.  Your local repo and the corresponding master branch on github are always going to mirror each other.  Hence, branching in git.
 
 
+[Here is a good reference](https://www.atlassian.com/git/tutorials/gitignore#git-ignore-patterns) on how to glob/pattern match in `.gitignore` files.
+
+
 #### Set Username and Email
 `git config --global user.name` -- your real name  
 `git config --global user.email` -- your email
@@ -195,3 +198,6 @@ Command | Function
 + If you try to push and get "Repository does not exist" this probably means that you cloned from the Zipfian repo rather than your fork. Make sure you created a fork to your account. Then run this command to push: `git push https://github.com/<your username>/precourse master`
 
 + If VIM loads in terminal in response to some commands and prevents you from exiting/acting, hit **shift + colon**, then **w**, then **q**, then **enter** to exit VIM and return to terminal
+
++ Ignore a file previously tracked: `git rm --cached <file>`
+    - This removes the file from the tracking index.  If you omit the `--cached` attribute, you will actually delete the file from your local repo as well.

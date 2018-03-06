@@ -130,3 +130,10 @@ mpl.use('Qt5Agg')
 
 If you want to change the MPL backend in an IPython Interactive Shell, you *must* do it before issuing any other MPL commands.
 `%matplotlib [backend of choice]` must be the first command issued with MPL.  Otherwise you will see the following error message: `Warning: Cannot change to a different GUI toolkit: qt4. Using [current backend] instead.`  In this case, simply `exit` IPython and reopen it, and change the backend as your first command.
+
+
+
+### Datetime Axes
+When doing time series plotting, to use a `datetime` series as an (x) axis you must pass the `.date` attribute only (not the full `datetime` object, to my knowledge).  In my `jp_gas_cubby.py` file, I experienced this first hand.  I had to use the `.date` attribute for the x-axis in `plt.plot()` command for the x-axis to be displayed as dates.  Using `df.plot()` seems to automatically format the axis but this excludes using the advanced niceties of `matplotlib`.  In general, something to look further into, but noting here for future reference.  
+
+Note I believe since `df.plot()` uses `matplotlib` under the hood, that all `time` components of `datetime` objects are excluded when plotting a time series with a `datetime` axis.
