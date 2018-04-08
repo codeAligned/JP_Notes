@@ -640,6 +640,110 @@ example from pellucid using `large_df_trial.csv`:
 
 <BR><BR><BR><BR><BR>
 
+
 ## NumPy
-`np.convolve`
-`np.percentile(a, q)` -- `a` is the array you are finding the percentiles of, `q` is the quantile you are searching for (i.e. `q=50` returns the value that is at the 50th percentile of `a`)
+One thing to note at the start: Numpy does _not_ have vectorized string operations by default.  A `.char` class has been added for some operations, in particular checking sub-string membership within all elements of an array.  Otherwise, use the already excellent built-in Python string operations.  [Here's a good post](https://stackoverflow.com/questions/8089940/applying-string-operations-to-numpy-arrays) about this.
+
++ `np.convolve` -  
++ `np.percentile(a, q)` -- `a` is the array you are finding the percentiles of, `q` is the quantile you are searching for (i.e. `q=50` returns the value that is at the 50th percentile of `a`)
+
++ `np.repeat(iter, reps)` - repeats the iterable by element for N reps.  Ex: `np.repeat([55,66,77], 2)` gives [55, 55, 66, 66, 77, 77], each element of the iterable is repeated twice.
+
++ `np.tile(iter, reps)` - cousin to `np.repeat`, instead of repeating an iterable by each element, it repeats the entire iterable by N reps, "tiling" it.
+
++ `np.vectorize(func, output_type)` - vectorizes a function to work with arrays:
+    ```python
+    def maxx(x, y):
+        """Get the maximum of two items"""
+        if x >= y:
+            return x
+        else:
+            return y
+
+    pair_max = np.vectorize(maxx, otypes=[float])
+
+    a = np.array([5, 7, 9, 8, 6, 4, 5])
+    b = np.array([6, 3, 4, 8, 9, 7, 1])
+
+    pair_max(a, b)
+    #> array([ 6.,  7.,  9.,  8.,  9.,  7.,  5.])
+    ```
+
++ Once you have an array, you can reorder columns or rows just by specifying the desired order as a slice indexer.
+    ```python
+    arr = np.arange(9).reshape(3,3)
+    In [24]: arr
+    Out[24]: array([[0, 1, 2],
+                    [3, 4, 5],
+                    [6, 7, 8]])
+
+    In [25]: arr[:, [1,0,2]]
+    Out[25]: array([[1, 0, 2],
+                    [4, 3, 5],
+                    [7, 6, 8]])
+    ```
+
+Same for simple reversal of a 2D matrix/array:
+to reverse rows, just use `arr[::-1, :]`
+
+
++ `np.set_printoptions()` -- All arguments optional, many options to modify display of Numpy objects.  Really handy.  
+    + `precision` is most common argument, limits decimals.
+    + `suppress=True` is also very common as it suppresses sometimes bulky scientific notation. `5.434049e-04` becomes `0.0005434` etc.
+    + `threshold` limits total elements displayed.
+
+
++ `np.genfromtxt()` - maintain str types inside array structure during import
+    ```python
+    url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+    iris = np.genfromtxt(url, delimiter=',', dtype='object')
+    names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+
+    # Print the first 3 rows
+    iris[:3]
+    #> array([[b'5.1', b'3.5', b'1.4', b'0.2', b'Iris-setosa'],
+    #>        [b'4.9', b'3.0', b'1.4', b'0.2', b'Iris-setosa'],
+    #>        [b'4.7', b'3.2', b'1.3', b'0.2', b'Iris-setosa']], dtype=object)
+    ```
+    Since we want to retain the species, a text field, we've have set the `dtype` to object. Had we set `dtype=None`, a 1d array of tuples would have been returned.
+
++ `np.ptp` - peak to peak.  Max - min along an axis.
++ `np.percentile`
+
+##### Value Counts a'la Pandas
++ `np.unique(arr, return_counts=True)` - returns counts per unique element, like `df.value_counts()`
+
+
+
+
+
+How to convert a numeric to a categorical (text) array?
+Difficulty Level: L2
+
+Q. Bin the petal length (3rd) column of iris_2d to form a text array, such that if petal length is:
+
+```python
+Less than 3 --> 'small'
+3-5 --> 'medium'
+'>=5 --> 'large'
+# Input
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+iris = np.genfromtxt(url, delimiter=',', dtype='object')
+names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+Show Solution
+# Input
+url = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
+iris = np.genfromtxt(url, delimiter=',', dtype='object')
+names = ('sepallength', 'sepalwidth', 'petallength', 'petalwidth', 'species')
+
+# Bin petallength
+petal_length_bin = np.digitize(iris[:, 2].astype('float'), [0, 3, 5, 10])
+
+# Map it to respective category
+label_map = {1: 'small', 2: 'medium', 3: 'large', 4: np.nan}
+petal_length_cat = [label_map[x] for x in petal_length_bin]
+
+# View
+petal_length_cat[:4]
+# ['small', 'small', 'small', 'small']
+```

@@ -31,7 +31,7 @@ Foremost is the ability to use _multiple cursors_ at a time!  To do this, simply
 Similarly if you double click a word and have the `highlight selected` package installed, you can hold down `Cmd + d` to cycle to the next appearance of the highlighted word, creating a new cursor at it as well.
 
 ##### Jump to Next Occurrence of Word
-`Cmd + g`
+`Cmd + d`
 
 ##### Go to Specific Line
 Hit `Ctrl + g` and type the line number you want to jump to.  Makes debugging easier too, as you can see the error message and jump directly to the line in question.
@@ -109,3 +109,6 @@ Now you can use commands in the terminal to open files or folders with Atom.
 Inside Settings there is an Editor Setting called __Soft Wrap__.  This means that the text displayed in your editor will wrap to a new line based on how large the current Atom window is.  If you make it larger, then more text will fit on one line.  A line that is wrapped is _not_ a new line as far as the editor is concerned, it is just a display convenience.  For those coding on laptops, which is most of us, the ability to visually wrap text based on how large I choose the window to be is a screen real estate-maximizing luxury.  It's also excellent for notes.
 
 Some people may want to enforce a Hard Wrap at a set line length, which is fine.  But for working on a laptop, I find the Soft Wrap (_not_ Soft Wrap at Line Length, which I disable) option to be most flexible and effective.  Do note that having long, multi-line statements or comments in code can make it very messy and frustrating to others reading your work on a different monitor setup (e.g. requiring them to scroll comically far to the right).  To address this, I always implement a manual New Line return near the edge of the Atom window.  But having Soft Wrap allows me the chance to have a keyword or statement extend slightly beyond this when it makes sense instead of forcing it onto a new line prematurely.  Ultimately this is a user preference, but one I am advocating for.
+
+##### Tab v. Enter to "Confirm" Auto-completion Suggestions
+Depending on personal preference, one may wish to have `TAB` be the "confirm" key instead of `ENTER`.  The default is either `ENTER` or both.  I use `TAB` only because whenever I hit the `ENTER` key, I want it to immediately cause a new line return regardless of if my cursor is currently in the middle of a word which is prompting an auto-complete suggestion.  By using `ENTER` as the confirmation key, the auto-complete suggestion will expand into the area at which your cursor was placed when you hit `ENTER`.  This bugs me greatly, so I use only `TAB`, much like in MS Excel.  The setting to change this option is nestled away in the Atom package __autocomplete-plus__.  

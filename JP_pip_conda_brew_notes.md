@@ -179,6 +179,7 @@ Common packages used (beware of cross-dependencies!):
 + beautifulsoup4
 + Flask
 + ghp-import (*github pages* for *Pelican* static site publishing)
++ sphinx
 + ipython
 + Jinja2
 + jupyter
@@ -189,8 +190,6 @@ Common packages used (beware of cross-dependencies!):
 `conda info --envs`
 Environment | Python Version | Purpose
 ------------|---------|---------
-
-
 
 
 ### Switch between two Python environments (2.7 and 3.x) in Anaconda:
@@ -227,7 +226,48 @@ Anaconda Python and Packages
 We use the Anaconda scientific python stack which is just a vanilla version of Python 2.7 along with all the packages that a data scientist would need, including NumPy, SciPy, SciKit-Learn, Pandas, and matplotlib. Anaconda manages the Python environment for us. If you need to install other Python packages (unlikely), do so with the conda command-line utility (i.e. `conda install some-cool-package`). Use conda list to see what's installed.
 
 to update itself `conda update conda`
-<BR><BR><BR>
+
+
+Note we can create a list of packages we want to use in an environment and then run a command which installs all these into the desired env.  There are a couple ways to do this.  One is by using `pip freeze` to create a `.txt` output file of all packages and versions currently installed in a given environment.  I'm not currently sure how to use that `.txt` file to install everything in it into an env, but I am certain it can be done.
+
+Another way is to use a `.yml` file.  We can include all desired info in the `.yml` file, even the env name.  Example:
+
+```yaml
+name: MyYAMLEnv
+channels:
+- defaults
+dependencies:
+- python=3.6
+- numpy
+- pandas
+- ipython
+- ipython_genutils
+- matplotlib
+- jsonschema
+- openssl
+- pip
+- pytest
+- scikit-learn
+- setuptools
+- statsmodels
+- scipy
+- mkl
+pip:
+    - ipython_genutils
+
+# etc...
+```
+
+Then we can issue a bash command to create this specified env in conda.  For example:  
+
+`conda env create -f MyYAMLEnv.yml`  
+
+The `-f` argument says to _force_ install all dependencies, even if already installed.
+
+
+<BR>
+<BR>
+<BR>
 
 
 
@@ -237,7 +277,7 @@ to update itself `conda update conda`
 ***
 <BR>
 
-We will commonly use **brew** to install packages which are not available through **conda** or **pip**.  **Homebrew** is built with Ruby and Git, so it supports versioning in a sense and supports installing packages that are *not* Python-specific, unlike **pip** or **conda** (though technically I believe **conda** does support some non-Python packages, it is certainly Python-centric).  Homebrew installs packages to their own directory and then symlinks their files into `/usr/local`.  Full documentation links are below.  Homebrew is a package manager, and Homebrew **Cask** is a full-application manager (Google Chrome, for example)
+Homebrew is a Mac OS package manager, and Homebrew **Cask** is a full-application manager (Google Chrome, for example).  We will commonly use **brew** to install packages which are not available through **conda** or **pip**.  **Homebrew** is built with Ruby and Git, so it supports versioning in a sense and supports installing packages that are *not* Python-specific, unlike **pip** or **conda** (though technically I believe **conda** does support some non-Python packages, it is certainly Python-centric).  Homebrew installs packages to their own directory and then symlinks their files into `/usr/local`.  Full documentation links are below.  
 
 ### Homebrew Installation
 Install **homebrew** and brew **cask**:
@@ -433,7 +473,11 @@ Command | Action
 
 
 
-<BR><BR><BR>
+
+
+<BR>
+<BR>
+<BR>
 
 ## PIP Package Manager
 ***

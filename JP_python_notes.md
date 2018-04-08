@@ -981,3 +981,17 @@ True
 #### Decorators
 http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
 > Python supports a feature called function closures which means that inner functions defined in non-global scope remember what their enclosing namespaces looked like at definition time.
+
+
+
+#### `locals()`
+This is foolish, unnecessary, and potentially unsafe, but this is technically how you would put all the Jobs into the global namespace (i.e. outside of the container) from a list or dict for FFT.
+```python
+for job, obj in job_dic.iteritems():
+    # locals()["%s" % job[0:3]] = obj
+    locals()[f"{job[:3]}"] = obj
+
+A1 = Job('Archer')
+A2 = Job('Archer')
+M1 = Job('Monk')
+```
